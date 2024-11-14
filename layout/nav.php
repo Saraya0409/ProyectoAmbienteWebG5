@@ -17,11 +17,11 @@
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="nav-link active" href="#!">Categorias</a></li>
+                            <li><a class="nav-link active" href="categoria.php">Categorias</a></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
-                            <li><a class="nav-link active" href="#!">Productos</a></li>
+                            <li><a class="nav-link active" href="producto.php">Productos</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
