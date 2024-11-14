@@ -118,7 +118,7 @@
                 <!-- Producto 1 -->
                 <tr>
                     <td>001</td>
-                    <td>Medicamento</td>
+                    <td>Jarabe</td>
                     <td>Drosera Homaccord Gotas 30ml Heel</td>
                     <td>Gotas homeopáticas para diversas aplicaciones</td>
                     <td>₡9000</td>

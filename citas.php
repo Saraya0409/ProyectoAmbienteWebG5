@@ -29,6 +29,14 @@
                     <div class="modal-body">
                         <form id="citaForm" method="POST" action="agregar_cita.php">
                             <div class="mb-3">
+                                <label for="idCita" class="form-label">ID de Cita</label>
+                                <input type="text" class="form-control" name="idCita" id="idCita" placeholder="Ingrese el ID de la cita" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cedulaPaciente" class="form-label">Cédula del Paciente</label>
+                                <input type="text" class="form-control" name="cedulaPaciente" id="cedulaPaciente" placeholder="Ingrese la cédula del paciente" required>
+                            </div>
+                            <div class="mb-3">
                                 <label for="nombreCita" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" name="nombreCita" id="nombreCita" placeholder="Ingrese el nombre" required>
                             </div>
@@ -42,7 +50,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="fechaCita" class="form-label">Fecha</label>
-                                <input type="datetime-local" class="form-control" name="fechaCita" id="fechaCita" required>
+                                <input type="date" class="form-control" name="fechaCita" id="fechaCita" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="horaCita" class="form-label">Hora</label>
+                                <input type="time" class="form-control" name="horaCita" id="horaCita" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Cita</button>
                         </form>
@@ -56,20 +68,26 @@
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
+                    <th>ID Cita</th>
+                    <th>Cédula</th>
                     <th>Nombre</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
                     <th>Fecha</th>
+                    <th>Hora</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="citaTableBody">
                 <!-- Ejemplo de datos de prueba -->
                 <tr>
+                    <td>001</td>
+                    <td>123456789</td>
                     <td>Juan Pérez</td>
                     <td>juan.perez@gmail.com</td>
                     <td>12345678</td>
-                    <td>2024-11-20 10:00</td>
+                    <td>2024-11-20</td>
+                    <td>10:00</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#citaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
