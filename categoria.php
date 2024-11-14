@@ -7,22 +7,42 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation-->
-    <?php include 'layout/nav.php'; ?>
-
-    <!-- Contenido principal -->
+       <!-- Navigation-->
+       <?php include 'layout/nav.php'; ?>
     <section class="container my-5">
         <h2 class="mb-4 text-center">Administrar Categorías de Productos</h2>
 
-        <!-- Formulario para agregar/actualizar categoría -->
-        <form action="categorias.php" method="POST" class="mb-4">
-            <input type="hidden" name="id" id="categoriaId">
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre de la Categoría</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el nombre de la categoría" required>
+        <!-- Botón para abrir el formulario modal -->
+        <button class="btn btn-primary mb-4" onclick="abrirModal()">Agregar Categoría</button>
+
+        <!-- Formulario Modal -->
+        <div class="modal" tabindex="-1" id="categoriaModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Agregar Categoría</h5>
+                        <button type="button" class="btn-close" onclick="cerrarModal()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="categoriaForm">
+                            <div class="mb-3">
+                                <label for="categoriaId" class="form-label">ID de Categoría</label>
+                                <input type="text" class="form-control" id="categoriaId" placeholder="Ingrese el ID de la categoría">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                                <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre de la categoría">
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" placeholder="Ingrese la descripción de la categoría">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100" onclick="guardarCategoria()">Guardar Categoría</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100" name="guardar">Guardar Categoría</button>
-        </form>
+        </div>
 
         <!-- Listado de categorías -->
         <h3 class="mt-5 mb-3 text-center">Lista de Categorías</h3>
@@ -31,41 +51,49 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Descripcion</th>
+                    <th>Descripción</th>
                 </tr>
             </thead>
-            <tbody>
-                <?php if (!empty($categorias)): ?>
-                    <?php foreach ($categorias as $categoria): ?>
-                        <tr>
-                            <td><?php echo $categoria['id']; ?></td>
-                            <td><?php echo $categoria['nombre']; ?></td>
-                            <td>
-                                <!-- Botón Modificar -->
-                                <button class="btn btn-warning btn-sm" onclick="editarCategoria('<?php echo $categoria['id']; ?>', '<?php echo $categoria['nombre']; ?>')">Modificar</button>
-                                <!-- Botón Eliminar -->
-                                <a href="categorias.php?eliminar=<?php echo $categoria['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar esta categoría?');">Eliminar</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="3" class="text-center">No hay categorías disponibles</td>
-                    </tr>
-                <?php endif; ?>
+            <tbody id="categoriaTableBody">
+                <tr>
+                    <td colspan="3" class="text-center">No hay categorías disponibles</td>
+                </tr>
             </tbody>
         </table>
     </section>
+    
+     <!-- Footer -->
+     <?php include 'layout/footer.php'; ?>
 
-    <!-- Footer -->
-    <?php include 'layout/footer.php'; ?>
-
-    <!-- Bootstrap JS y Script para manejar edición -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function editarCategoria(id, nombre) {
-            document.getElementById('categoriaId').value = id;
-            document.getElementById('nombre').value = nombre;
+        function abrirModal() {
+            document.getElementById('categoriaForm').reset();  // Limpiar el formulario
+            document.getElementById('categoriaModal').style.display = 'block';
+        }
+
+        function cerrarModal() {
+            document.getElementById('categoriaModal').style.display = 'none';
+        }
+
+        function guardarCategoria() {
+            const id = document.getElementById('categoriaId').value;
+            const nombre = document.getElementById('nombre').value;
+            const descripcion = document.getElementById('descripcion').value;
+
+            if (id && nombre && descripcion) {
+                const tbody = document.getElementById('categoriaTableBody');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${id}</td>
+                    <td>${nombre}</td>
+                    <td>${descripcion}</td>
+                `;
+                tbody.appendChild(row);
+                cerrarModal();
+            } else {
+                alert('Por favor, complete todos los campos');
+            }
         }
     </script>
 </body>
