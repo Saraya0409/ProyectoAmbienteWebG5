@@ -41,11 +41,6 @@
                                 <label for="cedulaFactura" class="form-label">Cédula</label>
                                 <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" placeholder="Ingrese la cédula" required>
                             </div>
-                            <!-- Campo de texto para ingresar múltiples productos -->
-                            <div class="mb-3">
-                                <label for="productosFactura" class="form-label">Productos</label>
-                                <textarea class="form-control" name="productosFactura" id="productosFactura" rows="3" placeholder="Ingrese cada producto en una nueva línea" required></textarea>
-                            </div>
                             <div class="mb-3">
                                 <label for="montoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="montoFactura" id="montoFactura" placeholder="Ingrese el monto de la factura" required>
@@ -86,10 +81,6 @@
                             </div>
                             <!-- Campo de texto para modificar múltiples productos -->
                             <div class="mb-3">
-                                <label for="editProductosFactura" class="form-label">Productos</label>
-                                <textarea class="form-control" name="editProductosFactura" id="editProductosFactura" rows="3" placeholder="Ingrese cada producto en una nueva línea" required></textarea>
-                            </div>
-                            <div class="mb-3">
                                 <label for="editMontoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="editMontoFactura" id="editMontoFactura" required>
                             </div>
@@ -116,7 +107,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Cédula</th>
-                    <th>Productos</th>
                     <th>Monto</th>
                     <th>Tipo de Pago</th>
                     <th>Acciones</th>
@@ -126,7 +116,6 @@
                 <tr>
                     <td>001</td>
                     <td>101010101</td>
-                    <td>Drosera Homaccord Gotas 30ml Heel</td>
                     <td>9000</td>
                     <td>Tarjeta</td>
                     <td>
@@ -137,7 +126,6 @@
                 <tr>
                     <td>002</td>
                     <td>202020202</td>
-                    <td>Gel para dolor muscular</td>
                     <td>12000</td>
                     <td>Efectivo</td>
                     <td>
