@@ -38,16 +38,16 @@
                                 <input type="text" class="form-control" name="idFactura" id="idFactura" placeholder="Ingrese el ID de la factura" required>
                             </div>
                             <div class="mb-3">
-                                <label for="fechaFactura" class="form-label">Fecha</label>
-                                <input type="datetime-local" class="form-control" name="fechaFactura" id="fechaFactura" required>
+                                <label for="cedulaFactura" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" placeholder="Ingrese la cédula" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productoFactura" class="form-label">Producto</label>
+                                <input type="text" class="form-control" name="productoFactura" id="productoFactura" placeholder="Ingrese el nombre del producto" required>
                             </div>
                             <div class="mb-3">
                                 <label for="montoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="montoFactura" id="montoFactura" placeholder="Ingrese el monto de la factura" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="pacienteFactura" class="form-label">Paciente</label>
-                                <input type="text" class="form-control" name="pacienteFactura" id="pacienteFactura" placeholder="Ingrese el nombre del paciente" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Factura</button>
                         </form>
@@ -71,16 +71,16 @@
                                 <input type="text" class="form-control" name="editIdFactura" id="editIdFactura" required>
                             </div>
                             <div class="mb-3">
-                                <label for="editFechaFactura" class="form-label">Fecha</label>
-                                <input type="datetime-local" class="form-control" name="editFechaFactura" id="editFechaFactura" required>
+                                <label for="editCedulaFactura" class="form-label">Cédula</label>
+                                <input type="text" class="form-control" name="editCedulaFactura" id="editCedulaFactura" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductoFactura" class="form-label">Producto</label>
+                                <input type="text" class="form-control" name="editProductoFactura" id="editProductoFactura" required>
                             </div>
                             <div class="mb-3">
                                 <label for="editMontoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="editMontoFactura" id="editMontoFactura" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editPacienteFactura" class="form-label">Paciente</label>
-                                <input type="text" class="form-control" name="editPacienteFactura" id="editPacienteFactura" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
                         </form>
@@ -95,18 +95,18 @@
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
-                    <th>Fecha</th>
+                    <th>Cédula</th>
+                    <th>Producto</th>
                     <th>Monto</th>
-                    <th>Paciente</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="facturaTableBody">
                 <tr>
                     <td>001</td>
-                    <td>2024-11-20 10:00</td>
-                    <td>15000</td>
-                    <td>Juan Pérez</td>
+                    <td>101010101</td>
+                    <td>Drosera Homaccord Gotas 30ml Heel</td>
+                    <td>9000</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -114,9 +114,9 @@
                 </tr>
                 <tr>
                     <td>002</td>
-                    <td>2024-12-20 10:00</td>
-                    <td>15000</td>
-                    <td>Maria Garcia</td>
+                    <td>202020202</td>
+                    <td>Gel para dolor muscular</td>
+                    <td>12000</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -134,3 +134,4 @@
 </body>
 
 </html>
+
