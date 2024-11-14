@@ -25,10 +25,9 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="agendarCita.php" class="btn" style="background-color: #28a745; color: white; font-weight: bold; padding: 8px 16px; border-radius: 5px; margin-left: 10px; text-align: center;"
-                        data-toggle="modal" data-target="#formularioModal" >
-                        Agendar Cita
-                        </a>
+                        <button class="btn btn-success" style="background-color: #28a745; color: white; font-weight: bold; padding: 8px 16px; border-radius: 5px; margin-left: 10px; text-align: center;" data-bs-toggle="modal" data-bs-target="#formularioModal">
+                            Agendar Cita
+                        </button>
                     </li>
                     <li class="nav-item">
                         <a href="buscarCita.php" class="btn"
@@ -71,3 +70,69 @@
             </div>
         </div>
     </nav>
+
+    <!-- Codigo para Agendar Citas-->
+    <div class="modal fade" id="formularioModal" tabindex="-1" aria-labelledby="formularioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formularioModalLabel">Formulario de Cita Médica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form action="procesar_formulario.php" method="post">
+                    
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cédula</label>
+                        <input type="number" id="cedula" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu nombre">
+                    </div>
+                    
+                    
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingresa tu teléfono">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo electrónico</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu correo electrónico">
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaCita" class="form-label">Fecha de cita</label>
+                        <input type="date" id="fechaCita" name="fechaCita" class="form-control" placeholder="Selecciona la fecha de la cita">
+                    </div>
+                    <div class="mb-3">
+                        <label for="horaCita" class="form-label">Hora de la cita</label>
+                        <select id="horaCita" name="horaCita" class="form-control">
+                            <option value="08:00">08:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">02:00 PM</option>
+                            <option value="16:00">04:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor</label>
+                        <select id="doctor" name="doctor" class="form-control">
+                            <option value="" selected disabled>Selecciona un Doctor</option>
+                            <option value="dr1">Dr. Carlos Ramirez Mora</option>
+                            <option value="dr2">Dr. Manuel Pereira Solis</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <button type="submit" class="btn btn-success">Enviar cita</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
