@@ -19,7 +19,33 @@
     <!-- Navigation-->
     <?php include 'layout/nav.php'; ?>
 
-    <!-- Section-->
+    <!-- Search and Filter Section -->
+    <section class="py-3">
+        <div class="container">
+            <div class="row">
+                <!-- Search Bar -->
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar por nombre de producto" />
+                        <button class="btn btn-outline-dark" type="button">Buscar</button>
+                    </div>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="col-md-4">
+                    <select class="form-select">
+                        <option value="">Filtrar por categoría</option>
+                        <option value="1">Categoría 1</option>
+                        <option value="2">Categoría 2</option>
+                        <option value="3">Categoría 3</option>
+                        <!-- Agrega más opciones según sea necesario -->
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -211,6 +237,7 @@
             </div>
         </div>
     </section>
+
     <!-- Footer-->
     <?php include 'layout/footer.php'; ?>
     <!-- Bootstrap core JS-->
