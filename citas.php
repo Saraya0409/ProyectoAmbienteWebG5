@@ -13,7 +13,7 @@
     <?php include 'layout/nav.php'; ?>
 
     <section class="container my-5">
-        <h2 class="mb-4 text-center">Administrar Citas y Facturas</h2>
+        <h2 class="mb-4 text-center">Administrar Citas </h2>
 
         <!-- Botón para abrir el formulario modal de agregar cita -->
         <li class="nav-item">
