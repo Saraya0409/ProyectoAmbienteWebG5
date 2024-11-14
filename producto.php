@@ -65,8 +65,43 @@
                 </tr>
             </thead>
             <tbody id="productoTableBody">
+            <tr>
+                    <td>001</td>
+                    <td>Drosera Homaccord Gotas 30ml Heel</td>
+                    <td>Gotas homeopáticas para diversas aplicaciones</td>
+                    <td>
+                        <input type="number" value="9000" min="0" class="precio-producto" style="width: 80px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                    </td>
+                    <td>
+                        <input type="number" value="1" min="1" class="cantidad-producto" style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm actualizar-btn">
+                            <i class="bi bi-arrow-repeat"></i> Actualizar
+                        </button>
+                        <button class="btn btn-danger btn-sm eliminar-btn">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
                 <tr>
-                    <td colspan="5" class="text-center">No hay productos disponibles</td>
+                    <td>002</td>
+                    <td>Nux Vomica 9 CH Glóbulos 4g Boiron</td>
+                    <td>Glóbulos homeopáticos para el tratamiento de dolencias digestivas</td>
+                    <td>
+                        <input type="number" value="3000" min="0" class="precio-producto" style="width: 80px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                    </td>
+                    <td>
+                        <input type="number" value="2" min="1" class="cantidad-producto" style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm actualizar-btn">
+                            <i class="bi bi-arrow-repeat"></i> Actualizar
+                        </button>
+                        <button class="btn btn-danger btn-sm eliminar-btn">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

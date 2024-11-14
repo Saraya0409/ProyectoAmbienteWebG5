@@ -55,9 +55,36 @@
                 </tr>
             </thead>
             <tbody id="categoriaTableBody">
-                <tr>
-                    <td colspan="3" class="text-center">No hay categorías disponibles</td>
+            <tr>
+                    <td>001</td>
+                    <td>Medicamentos Jarabe</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input type="text" value="Productos de jarabes" class="descripcion-categoria" style="width: 100%; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                            <button class="btn btn-primary btn-sm ms-2 actualizar-btn">
+                                <i class="bi bi-arrow-repeat"></i> Actualizar
+                            </button>
+                            <button class="btn btn-danger btn-sm ms-2 eliminar-btn">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </td>
                 </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Medicamentos Pastilla</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input type="text" value="Productos de consumo oral en pastilla" class="descripcion-categoria" style="width: 100%; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                            <button class="btn btn-primary btn-sm ms-2 actualizar-btn">
+                                <i class="bi bi-arrow-repeat"></i> Actualizar
+                            </button>
+                            <button class="btn btn-danger btn-sm ms-2 eliminar-btn">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>       
             </tbody>
         </table>
     </section>
