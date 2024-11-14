@@ -49,6 +49,14 @@
                                 <label for="montoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="montoFactura" id="montoFactura" placeholder="Ingrese el monto de la factura" required>
                             </div>
+                            <!-- Campo Tipo de Pago -->
+                            <div class="mb-3">
+                                <label for="tipoPago" class="form-label">Tipo de Pago</label>
+                                <select class="form-control" name="tipoPago" id="tipoPago" required>
+                                    <option value="Local">Local</option>
+                                    <option value="Envio">Envío a casa</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Factura</button>
                         </form>
                     </div>
@@ -82,6 +90,14 @@
                                 <label for="editMontoFactura" class="form-label">Monto</label>
                                 <input type="number" class="form-control" name="editMontoFactura" id="editMontoFactura" required>
                             </div>
+                            <!-- Campo Tipo de Pago para modificar -->
+                            <div class="mb-3">
+                                <label for="editTipoPago" class="form-label">Tipo de Pago</label>
+                                <select class="form-control" name="editTipoPago" id="editTipoPago" required>
+                                    <option value="Local">Local</option>
+                                    <option value="Envio">Envío a casa</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
                         </form>
                     </div>
@@ -98,6 +114,7 @@
                     <th>Cédula</th>
                     <th>Producto</th>
                     <th>Monto</th>
+                    <th>Tipo de Pago</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -107,6 +124,7 @@
                     <td>101010101</td>
                     <td>Drosera Homaccord Gotas 30ml Heel</td>
                     <td>9000</td>
+                    <td>Local</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -117,6 +135,7 @@
                     <td>202020202</td>
                     <td>Gel para dolor muscular</td>
                     <td>12000</td>
+                    <td>Envío a casa</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -124,14 +143,15 @@
                 </tr>
             </tbody>
         </table>
-
     </section>
 
     <!-- Footer -->
     <?php include 'layout/footer.php'; ?>
 
+    <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
+
 
