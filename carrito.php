@@ -71,7 +71,7 @@
             </table>
             <!-- Botones de Pago -->
             <div class="text-end">
-                <a href="envio.php" class="btn btn-success btn-lg me-2" style="background-color: #28a745; border-color: #28a745; color: white;">
+                <a href="formEnvio.php" class="btn btn-success btn-lg me-2" style="background-color: #28a745; border-color: #28a745; color: white;">
                     Envío a Casa
                 </a>
                 <a href="pagoLocal.php" class="btn btn-success btn-lg" style="background-color: #28a745; border-color: #28a745; color: white;">

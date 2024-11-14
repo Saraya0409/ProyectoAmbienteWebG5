@@ -41,9 +41,10 @@
                                 <label for="cedulaFactura" class="form-label">Cédula</label>
                                 <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" placeholder="Ingrese la cédula" required>
                             </div>
+                            <!-- Campo de texto para ingresar múltiples productos -->
                             <div class="mb-3">
-                                <label for="productoFactura" class="form-label">Producto</label>
-                                <input type="text" class="form-control" name="productoFactura" id="productoFactura" placeholder="Ingrese el nombre del producto" required>
+                                <label for="productosFactura" class="form-label">Productos</label>
+                                <textarea class="form-control" name="productosFactura" id="productosFactura" rows="3" placeholder="Ingrese cada producto en una nueva línea" required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="montoFactura" class="form-label">Monto</label>
@@ -53,8 +54,9 @@
                             <div class="mb-3">
                                 <label for="tipoPago" class="form-label">Tipo de Pago</label>
                                 <select class="form-control" name="tipoPago" id="tipoPago" required>
-                                    <option value="Local">Local</option>
-                                    <option value="Envio">Envío a casa</option>
+                                    <option value="Local">Efectivo</option>
+                                    <option value="Envio">Tarjeta</option>
+                                    <option value="Envio">Sinpe</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Factura</button>
@@ -82,9 +84,10 @@
                                 <label for="editCedulaFactura" class="form-label">Cédula</label>
                                 <input type="text" class="form-control" name="editCedulaFactura" id="editCedulaFactura" required>
                             </div>
+                            <!-- Campo de texto para modificar múltiples productos -->
                             <div class="mb-3">
-                                <label for="editProductoFactura" class="form-label">Producto</label>
-                                <input type="text" class="form-control" name="editProductoFactura" id="editProductoFactura" required>
+                                <label for="editProductosFactura" class="form-label">Productos</label>
+                                <textarea class="form-control" name="editProductosFactura" id="editProductosFactura" rows="3" placeholder="Ingrese cada producto en una nueva línea" required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="editMontoFactura" class="form-label">Monto</label>
@@ -94,8 +97,9 @@
                             <div class="mb-3">
                                 <label for="editTipoPago" class="form-label">Tipo de Pago</label>
                                 <select class="form-control" name="editTipoPago" id="editTipoPago" required>
-                                    <option value="Local">Local</option>
-                                    <option value="Envio">Envío a casa</option>
+                                    <option value="Local">Efectivo</option>
+                                    <option value="Envio">Tarjeta</option>
+                                    <option value="Envio">Sinpe</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
@@ -112,7 +116,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Cédula</th>
-                    <th>Producto</th>
+                    <th>Productos</th>
                     <th>Monto</th>
                     <th>Tipo de Pago</th>
                     <th>Acciones</th>
@@ -124,7 +128,7 @@
                     <td>101010101</td>
                     <td>Drosera Homaccord Gotas 30ml Heel</td>
                     <td>9000</td>
-                    <td>Local</td>
+                    <td>Tarjeta</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -135,7 +139,7 @@
                     <td>202020202</td>
                     <td>Gel para dolor muscular</td>
                     <td>12000</td>
-                    <td>Envío a casa</td>
+                    <td>Efectivo</td>
                     <td>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarFacturaModal">Modificar</button>
                         <button class="btn btn-danger btn-sm">Eliminar</button>
@@ -153,5 +157,3 @@
 </body>
 
 </html>
-
-

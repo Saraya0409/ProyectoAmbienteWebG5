@@ -12,6 +12,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="citas.php">Citas</a></li>
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="factura.php">Facturas</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="envio.php">Envios</a></li>
                     <li class="nav-item"><a class="nav-link active" href="usuario.php">Usuarios</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
