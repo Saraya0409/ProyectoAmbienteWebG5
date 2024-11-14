@@ -7,142 +7,135 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-       <!-- Navigation-->
-       <?php include 'layout/nav.php'; ?>
+    <!-- Navigation -->
+    <?php include 'layout/nav.php'; ?>
+    
     <section class="container my-5">
         <h2 class="mb-4 text-center">Administrar Productos</h2>
 
         <!-- Botón para abrir el formulario modal -->
-        <button class="btn btn-primary mb-4" onclick="abrirModal()">Agregar Producto</button>
+        <li class="nav-item">
+            <a href="#ProductoModal" class="btn btn-primary mb-4" data-bs-toggle="modal">Agregar Producto</a>
+        </li>
 
-        <!-- Formulario Modal -->
-        <div class="modal" tabindex="-1" id="productoModal">
+        <!-- Formulario Modal para agregar Producto -->
+        <div class="modal fade" id="ProductoModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Agregar Producto</h5>
-                        <button type="button" class="btn-close" onclick="cerrarModal()"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="productoForm">
+                        <form id="ProductoForm" method="POST" action="agregar_Producto.php">
                             <div class="mb-3">
-                                <label for="categoriaId" class="form-label">ID de Categoría</label>
-                                <input type="text" class="form-control" id="categoriaId" placeholder="Ingrese el ID de la categoría">
+                                <label for="categoriaId" class="form-label">ID Categoria</label>
+                                <input type="text" class="form-control" name="categoriaId" id="categoriaId" placeholder="Ingrese el ID de la Categoria" required>
                             </div>
                             <div class="mb-3">
-                                <label for="nombreProducto" class="form-label">Nombre del Producto</label>
-                                <input type="text" class="form-control" id="nombreProducto" placeholder="Ingrese el nombre del producto">
+                                <label for="nombreProducto" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" placeholder="Ingrese el nombre del Producto" required>
                             </div>
                             <div class="mb-3">
-                                <label for="descripcion" class="form-label">Descripción</label>
-                                <input type="text" class="form-control" id="descripcion" placeholder="Ingrese la descripción del producto">
+                                <label for="descripcion" class="form-label">Descripcion</label>
+                                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Ingrese descripcion de la Producto" required>
                             </div>
                             <div class="mb-3">
-                                <label for="precio" class="form-label">Precio</label>
-                                <input type="number" class="form-control" id="precio" placeholder="Ingrese el precio del producto">
+                                <label for="ProductoPrecio" class="form-label">Precio</label>
+                                <input type="number" class="form-control" name="precio" id="ProductoPrecio" placeholder="Ingrese el precio del Producto" required min="0" step="0.01">
                             </div>
                             <div class="mb-3">
-                                <label for="cantidad" class="form-label">Cantidad</label>
-                                <input type="number" class="form-control" id="cantidad" placeholder="Ingrese la cantidad del producto">
+                                <label for="ProductoCantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" name="cantidad" id="ProductoCantidad" placeholder="Ingrese la cantidad del Producto" required min="1" step="1">
                             </div>
-                            <button type="button" class="btn btn-primary w-100" onclick="guardarProducto()">Guardar Producto</button>
+                            <button type="submit" class="btn btn-primary w-100">Guardar Producto</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Listado de productos -->
+        <!-- Modal para modificar Producto -->
+        <div class="modal fade" id="modificarProductoModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modificar Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="modificarProductoForm" method="POST" action="modificar_Producto.php">
+                            <div class="mb-3">
+                                <label for="editcategoriaId" class="form-label">ID Categoria</label>
+                                <input type="text" class="form-control" name="editProductoId" id="editProductoId" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editNombreProducto" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="editNombreProducto" id="editNombreProducto" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editdescripcion" class="form-label">Descripcion</label>
+                                <input type="text" class="form-control" name="editdescripcion" id="editdescripcion" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductoPrecio" class="form-label">Precio</label>
+                                <input type="number" class="form-control" name="editProductoPrecio" id="editProductoPrecio" required min="0" step="0.01">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProductoCantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" name="editProductoCantidad" id="editProductoCantidad" required min="1" step="1">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Listado de Productos -->
         <h3 class="mt-5 mb-3 text-center">Lista de Productos</h3>
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>ID Categoría</th>
+                    <th>ID Categoria</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
+                    <th>Descripcion</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="productoTableBody">
+            <tbody id="ProductoTableBody">
             <tr>
-                    <td>001</td>
-                    <td>Drosera Homaccord Gotas 30ml Heel</td>
-                    <td>Gotas homeopáticas para diversas aplicaciones</td>
+                <td>001</td>
+                <td>Drosera Homaccord Gotas 30ml Heel</td>
                     <td>
-                        <input type="number" value="9000" min="0" class="precio-producto" style="width: 80px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input type="text" value="Producto gel" class="descripcion-producto">
+
+                        </div>
+                    <td>₡9000</td>
+                    <td>
+                        <input type="number" value="2" min="1" style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
+                    </td>
                     </td>
                     <td>
-                        <input type="number" value="1" min="1" class="cantidad-producto" style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm actualizar-btn">
+                    <button class="btn btn-primary btn-sm ms-2">
                             <i class="bi bi-arrow-repeat"></i> Actualizar
-                        </button>
-                        <button class="btn btn-danger btn-sm eliminar-btn">
+                    </button>
+                    <button class="btn btn-danger btn-sm ms-2">
                             <i class="bi bi-trash"></i> Eliminar
-                        </button>
+                    </button>
                     </td>
                 </tr>
-                <tr>
-                    <td>002</td>
-                    <td>Nux Vomica 9 CH Glóbulos 4g Boiron</td>
-                    <td>Glóbulos homeopáticos para el tratamiento de dolencias digestivas</td>
-                    <td>
-                        <input type="number" value="3000" min="0" class="precio-producto" style="width: 80px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
-                    </td>
-                    <td>
-                        <input type="number" value="2" min="1" class="cantidad-producto" style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm actualizar-btn">
-                            <i class="bi bi-arrow-repeat"></i> Actualizar
-                        </button>
-                        <button class="btn btn-danger btn-sm eliminar-btn">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
+
             </tbody>
         </table>
     </section>
+    
     <!-- Footer -->
     <?php include 'layout/footer.php'; ?>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function abrirModal() {
-            document.getElementById('productoForm').reset();  // Limpiar el formulario
-            document.getElementById('productoModal').style.display = 'block';
-        }
-
-        function cerrarModal() {
-            document.getElementById('productoModal').style.display = 'none';
-        }
-
-        function guardarProducto() {
-            const categoriaId = document.getElementById('categoriaId').value;
-            const nombreProducto = document.getElementById('nombreProducto').value;
-            const descripcion = document.getElementById('descripcion').value;
-            const precio = document.getElementById('precio').value;
-            const cantidad = document.getElementById('cantidad').value;
-
-            if (categoriaId && nombreProducto && descripcion && precio && cantidad) {
-                const tbody = document.getElementById('productoTableBody');
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${categoriaId}</td>
-                    <td>${nombreProducto}</td>
-                    <td>${descripcion}</td>
-                    <td>${precio}</td>
-                    <td>${cantidad}</td>
-                `;
-                tbody.appendChild(row);
-                cerrarModal();
-            } else {
-                alert('Por favor, complete todos los campos');
-            }
-        }
-    </script>
 </body>
 </html>
