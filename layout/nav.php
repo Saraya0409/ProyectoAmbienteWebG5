@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">    
+    
+        <style>
+        input.error, textarea.error {
+        border-color: #e74c3c;
+        }
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        }</style>
+</head>
 <!-- nav.php -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
@@ -81,29 +95,34 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <form action="procesar_formulario.php" method="post">
+                <form action="procesarFormularioCita.php" method="post"  id="contactForm">
                     
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula</label>
-                        <input type="number" id="cedula" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
+                        <input type="text" id="cedula" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
+                        <span id="error-cedula">La cédula es obligatoria.</span>
                     </div>
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre Completo</label>
                         <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu nombre">
+                        <span id="error-nombre">El nombre es obligatorio.</span>
                     </div>
                     
                     
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
                         <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingresa tu teléfono">
+                        <span id="error-telefono">El teléfono es obligatorio.</span>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo electrónico</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu correo electrónico">
+                        <span id="error-email">El email es obligatorio.</span>
                     </div>
                     <div class="mb-3">
                         <label for="fechaCita" class="form-label">Fecha de cita</label>
                         <input type="date" id="fechaCita" name="fechaCita" class="form-control" placeholder="Selecciona la fecha de la cita">
+                        <span id="error-fechaCita">La fecha de la cita es obligatoria.</span>
                     </div>
                     <div class="mb-3">
                         <label for="horaCita" class="form-label">Hora de la cita</label>
@@ -118,10 +137,11 @@
                     <div class="mb-3">
                         <label for="doctor" class="form-label">Doctor</label>
                         <select id="doctor" name="doctor" class="form-control">
-                            <option value="" selected disabled>Selecciona un Doctor</option>
-                            <option value="dr1">Dr. Carlos Ramirez Mora</option>
-                            <option value="dr2">Dr. Manuel Pereira Solis</option>
+                            <option value="1">Dr. Carlos Ramirez Mora</option></option>
+                            <option value="2">Dr. Manuel Jimenez Sanchez</option>
+                            <option value="3">Dr. Manuel Pereira Solis</option>
                         </select>
+                      
                     </div>
                     <div class="text-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
@@ -137,3 +157,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/ProyectoAmbienteWebG5/js/scripts.js"></script>
+    
+</html>
