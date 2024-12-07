@@ -16,56 +16,78 @@
         <h2 class="mb-4 text-center">Administrar Citas</h2>
 
         <!-- Botón para abrir el formulario modal de agregar cita -->
-        <a href="#citaModal" class="btn btn-primary mb-4" data-bs-toggle="modal">Agregar Cita</a>
-
+        <a  data-bs-target="#formularioModal" class="btn btn-primary mb-4" data-bs-toggle="modal">Agregar Cita</a>
+        
         <!-- Formulario Modal para agregar cita -->
-        <div class="modal fade" id="citaModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Agregar Cita</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal fade" id="formularioModal" tabindex="-1" aria-labelledby="formularioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formularioModalLabel">Agendar de Cita Médica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formularioCitas">
+                    
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cédula</label>
+                        <input type="text" id="cedula" name="cedula" class="form-control" placeholder="Ingresa tu cédula">
+                        <span id="error-cedula">La cédula es obligatoria.</span>
                     </div>
-                    <div class="modal-body">
-                        <form id="citaForm" method="POST" action="agregar_cita.php">
-                            <div class="mb-3">
-                                <label for="idCita" class="form-label">ID de Cita</label>
-                                <input type="text" class="form-control" name="idCita" id="idCita" placeholder="Ingrese el ID de la cita" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="cedulaPaciente" class="form-label">Cédula del Paciente</label>
-                                <input type="text" class="form-control" name="cedulaPaciente" id="cedulaPaciente" placeholder="Ingrese la cédula del paciente" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nombreCita" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" name="nombreCita" id="nombreCita" placeholder="Ingrese el nombre" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="correoCita" class="form-label">Correo</label>
-                                <input type="email" class="form-control" name="correoCita" id="correoCita" placeholder="Ingrese el correo" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="telefonoCita" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" name="telefonoCita" id="telefonoCita" placeholder="Ingrese el teléfono" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="fechaCita" class="form-label">Fecha</label>
-                                <input type="date" class="form-control" name="fechaCita" id="fechaCita" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="horaCita" class="form-label">Hora</label>
-                                <input type="time" class="form-control" name="horaCita" id="horaCita" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Guardar Cita</button>
-                        </form>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingresa tu nombre">
+                        <span id="error-nombre">El nombre es obligatorio.</span>
                     </div>
-                </div>
+                    
+                    
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Ingresa tu teléfono">
+                        <span id="error-telefono">El teléfono es obligatorio.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo electrónico</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Ingresa tu correo electrónico">
+                        <span id="error-email">El email es obligatorio.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fechaCita" class="form-label">Fecha de cita</label>
+                        <input type="date" id="fechaCita" name="fechaCita" class="form-control" placeholder="Selecciona la fecha de la cita">
+                        <span id="error-fechaCita">La fecha de la cita es obligatoria.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="horaCita" class="form-label">Hora de la cita</label>
+                        <select id="horaCita" name="horaCita" class="form-control">
+                            <option value="08:00">08:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="14:00">02:00 PM</option>
+                            <option value="16:00">04:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="doctor" class="form-label">Doctor</label>
+                        <select id="doctor" name="doctor" class="form-control">
+                            <option value="1">Dr. Carlos Ramirez Mora</option></option>
+                            <option value="2">Dr. Manuel Jimenez Sanchez</option>
+                            <option value="3">Dr. Manuel Pereira Solis</option>
+                        </select>
+                      
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <button type="submit" class="btn btn-success">Enviar cita</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- Tabla para mostrar citas -->
         <h3 class="mt-5 mb-3 text-center">Lista de Citas</h3>
-        <table class="table table-bordered">
+        <table class="table table-bordered text-center" id="listCita">
             <thead class="table-dark">
                 <tr>
                     <th>ID Cita</th>
@@ -75,24 +97,11 @@
                     <th>Teléfono</th>
                     <th>Fecha</th>
                     <th>Hora</th>
+                    <th>Doctor</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="citaTableBody">
-                <!-- Ejemplo de datos de prueba -->
-                <tr>
-                    <td>001</td>
-                    <td>123456789</td>
-                    <td>Juan Pérez</td>
-                    <td>juan.perez@gmail.com</td>
-                    <td>12345678</td>
-                    <td>2024-11-20</td>
-                    <td>10:00</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#citaModal">Modificar</button>
-                        <button class="btn btn-danger btn-sm">Eliminar</button>
-                    </td>
-                </tr>
+            <tbody>
             </tbody>
         </table>
     </section>
@@ -101,6 +110,7 @@
     <?php include 'layout/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </body>
 
 </html>

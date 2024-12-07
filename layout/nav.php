@@ -2,15 +2,32 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Shop Homepage - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     
-        <style>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/ProyectoAmbienteWebG5/js/scripts.js"></script>
+    <style>
         input.error, textarea.error {
         border-color: #e74c3c;
         }
         body {
         font-family: Arial, sans-serif;
         background-color: #f0f0f0;
-        }</style>
+        }
+    </style>
+        
 </head>
 <!-- nav.php -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -95,7 +112,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <form action="procesarFormularioCita.php" method="post"  id="contactForm">
+                <form id="formularioCitas">
                     
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula</label>
@@ -157,6 +174,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="/ProyectoAmbienteWebG5/js/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     
 </html>
