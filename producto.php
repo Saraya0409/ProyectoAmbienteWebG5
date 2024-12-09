@@ -1,3 +1,4 @@
+<?php include 'layout/nav.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,9 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <?php include 'layout/nav.php'; ?>
-    
     <section class="container my-5">
         <h2 class="mb-4 text-center">Administrar Productos</h2>
 

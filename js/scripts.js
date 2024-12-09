@@ -77,8 +77,7 @@ $(function () {
                     }
                     alert(response.message);
                 });
-             //$(this).unbind('submit').submit();
-            } catch (error) { // Capturar errores inesperados en el bloque principal 
+            } catch (error) { 
                 console.error("Error inesperado:", error); 
                 alert("Ocurrió un error inesperado al intentar procesar la solicitud."); }
              
@@ -104,7 +103,8 @@ $(function () {
                              elemento.fechaCita + "</td><td>" + 
                              elemento.horaCita + "</td><td>" + 
                              elemento.doctor + "</td><td>" +
-                            "<button class='btn btn-warning btn-sm' data-id='" + elemento.idcitas + "' onclick='editarCita(" + elemento.idcitas + ")'>Editar</button>" +
+                           "<a href='editarCita.php?id=" + elemento.idcitas + "' class='btn btn-warning btn-sm'>Editar</a>" +
+                            
                             " | " +
                             "<button class='btn btn-danger btn-sm' id='eliminarCita' data-id='" + elemento.idcitas + "' )'>Eliminar</button>" +
                          "</td>" +
@@ -158,8 +158,8 @@ $(function () {
                                  elemento.fechaCita + "</td><td>" + 
                                  elemento.horaCita + "</td><td>" + 
                                  elemento.doctor + "</td><td>" +
-                                "<button class='btn btn-warning btn-sm' data-id='" + elemento.idcitas + "' onclick='editarCita(" + elemento.idcitas + ")'>Editar</button>" +
-                                "</td>" +
+                                 "<a href='editarCita.php?id=" + elemento.idcitas + "' class='btn btn-warning btn-sm'>Editar</a>" +
+                                 "</td>" +
                          "</tr>"
                             );
                         });
@@ -178,30 +178,169 @@ $(function () {
 
 
             
-            $('#eliminarCita').on('click', function (e) {
-                var id = $(this).data('id');
-                alert(id);
-            })
-
-
-            function eliminarCita(id) {
-             alert("entra a eliminar")
+            $(document).on('click', '#eliminarCita', function (e) {
+                e.preventDefault(); 
+                var id = $(this).data('id');                
+                
                 if (confirm("¿Estás seguro de que deseas eliminar esta cita?")) {              
                     $.post("procesarCitaBE.php", {
                         action: "delete",
                         id: id 
                     }, function(data, status) {
+                        $('#listCita tbody').empty();
                         let response = JSON.parse(data);
                         
-                        if (response.status == "00") {  alert(response.message); $('#listCitafiltro').empty();  
-                            buscarCitas(); 
+                        if (response.status == "00") {  alert(response.message);
+                           
+                             getAllCitas();
                         } else {
                           
                             alert(response.message);
                         }
                     });
                 }
-            }
-  
+                 else {
+                    alert('La eliminación fue cancelada.');
+                }
+            });
+    
+       const paginaActual = window.location.pathname;
+            
+   
+       if (paginaActual.includes("editarCita.php")) {
+               $('#error-cedulaE').hide();
+               $('#error-nombreE').hide();
+               $('#error-telefonoE').hide();
+               $('#error-emailE').hide();
+               $('#error-fechaCitaE').hide();
+               $('#error-horaCitaE').hide();
+               $('#error-doctorE').hide();
+                 getById();
+                }
+       
+            
+       function getById() {
+        const id = new URLSearchParams(window.location.search).get("id"); 
+       
+        if (!id) {
+            alert("ID no válido o no proporcionado.");
+            return;
+        }        
+        try{
+            $.post("procesarCitaBE.php",
+                {
+                    action: "getById", id: id
+                },
+                function (data, status) {
+                    let response = JSON.parse(data);
+                    if(response.status == '00'){
+                        response.citas.forEach(elemento => {
+                            
+                            $('#idcitasE').val(elemento.idcitas );
+                            $('#cedulaE').val(elemento.cedula );                           
+                            $('#nombreE').val(elemento.nombre );
+                            $('#telefonoE').val(elemento.telefono );
+                            $('#emailE').val(elemento.email );
+                            $('#fechaCitaE').val(elemento.fechaCita );
+                            $('#horaCitaE').val(elemento.horaCita );
+                            $('#doctorE').val(elemento.doctor );
+                                                 
+                        });
+                    }else {
+                        alert("no se encontro nada")
+                    }
+                }
+            )
+            } catch (error) { 
+                console.error("Error inesperado:", error); 
+                alert("Ocurrió un error inesperado al intentar procesar la solicitud."); }
+       }
+
+
+       $('#formularioeditarcitas').on('submit', function (e) {
+        e.preventDefault();
+        
+        let isValid = true;
+
+        if ($('#cedulaE').val().trim() === '') {
+            $('#cedulaE').addClass('error');
+            $('#error-cedulaE').show();
+            isValid = false;
+        } else {
+            $('#cedulaE').removeClass('error');
+            $('#error-cedulaE').hide();
+        }
+
+        if ($('#emailE').val().trim() === '') {
+            $('#emailE').addClass('error');
+            $('#error-emailE').show();
+            isValid = false;
+        } else {
+            $('#emailE').removeClass('error');
+            $('#error-emailE').hide();
+        }
+
+        if ($('#nombreE').val().trim() === '') {
+            $('#nombreE').addClass('error');
+            $('#error-nombreE').show();
+            isValid = false;
+        } else {
+            $('#nombreE').removeClass('error');
+            $('#error-nombreE').hide();
+        }
+
+        if ($('#telefonoE').val().trim() === '') {
+            $('#telefonoE').addClass('error');
+            $('#error-telefonoE').show();
+            isValid = false;
+        } else {
+            $('#telefonoE').removeClass('error');
+            $('#error-telefonoE').hide();
+        }
+        if ($('#fechaCitaE').val().trim() === '') {
+            $('#fechaCitaE').addClass('error');
+            $('#error-fechaCitaE').show();
+            isValid = false;
+        } else {
+            $('#fechaCitaE').removeClass('error');
+            $('#error-fechaCitaE').hide();
+        }
+       console.log($('#idcitasE').val().trim());
+        if (isValid) {
+            try{
+             $.post("procesarCitaBE.php",
+                {
+                    action: "update",
+                    idcitas:$('#idcitasE').val().trim(),                    
+                    cedula: $('#cedulaE').val().trim(),                    
+                    nombre: $('#nombreE').val().trim(),
+                    telefono: $('#telefonoE').val().trim(),
+                    email: $('#emailE').val().trim(),
+                    fechaCita: $('#fechaCitaE').val().trim(),
+                    horaCita: $('#horaCitaE').val().trim(),
+                    doctor: $('#doctorE').val().trim()
+                   
+                },
+                function (data, status) {
+                  
+                    let response = JSON.parse(data);                    
+                    if(response.status == '00'){                          
+                        window.location.href = "citas.php";                                 
+                        getAllCitas();                       
+                        
+                    }
+                    if(response.status == '01'){                          
+                        window.location.href = "buscarCita.php";                                 
+                        getAllCitas();                       
+                        
+                    }
+                   
+                    alert(response.message);
+                });
+            } catch (error) { 
+                console.error("Error inesperado:", error); 
+                alert("Ocurrió un error inesperado al intentar procesar la solicitud."); }
+             
+        }})
 })
 

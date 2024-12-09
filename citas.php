@@ -1,3 +1,4 @@
+<?php include 'layout/nav.php'; ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,7 +11,7 @@
 
 <body>
     <!-- Navigation -->
-    <?php include 'layout/nav.php'; ?>
+
 
     <section class="container my-5">
         <h2 class="mb-4 text-center">Administrar Citas</h2>

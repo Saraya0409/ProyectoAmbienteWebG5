@@ -1,3 +1,4 @@
+<?php include 'layout/nav.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +6,7 @@
 
 <body>
     <!-- Navigation-->
-    <?php include 'layout/nav.php'; ?>
+    
 
     <!-- Search and Filter Section -->
     <section class="py-3">

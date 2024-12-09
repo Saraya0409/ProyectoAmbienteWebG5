@@ -1,3 +1,4 @@
+<?php include 'layout/nav.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,9 +11,6 @@
 </head>
 
 <body>
-
-    <!-- Navigation-->
-    <?php include 'layout/nav.php'; ?>
 
     <!-- Contenido principal -->
     <section class="container my-5">

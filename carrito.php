@@ -1,3 +1,4 @@
+<?php include 'layout/nav.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,8 +14,6 @@
 </head>
 
 <body>
-    <!-- Navigation-->
-    <?php include 'layout/nav.php'; ?>
     
     
     
