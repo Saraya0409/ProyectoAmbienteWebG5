@@ -42,7 +42,6 @@
                     <th>Fecha</th>
                     <th>Hora</th>
                     <th>Doctor</th>
-                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>

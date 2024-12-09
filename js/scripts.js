@@ -157,9 +157,7 @@ $(function () {
                                  elemento.email + "</td><td>" + 
                                  elemento.fechaCita + "</td><td>" + 
                                  elemento.horaCita + "</td><td>" + 
-                                 elemento.doctor + "</td><td>" +
-                                 "<a href='editarCita.php?id=" + elemento.idcitas + "' class='btn btn-warning btn-sm'>Editar</a>" +
-                                 "</td>" +
+                                 elemento.doctor + "</td>"+
                          "</tr>"
                             );
                         });
@@ -329,11 +327,7 @@ $(function () {
                         getAllCitas();                       
                         
                     }
-                    if(response.status == '01'){                          
-                        window.location.href = "buscarCita.php";                                 
-                        getAllCitas();                       
-                        
-                    }
+                    
                    
                     alert(response.message);
                 });

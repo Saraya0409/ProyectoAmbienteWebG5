@@ -160,11 +160,8 @@ switch ($data['action']) {
                    
                     try {
                         if ($conn->query($query) ==  TRUE) { 
-                            if($_SESSION['rol'] == "admin"){
                                 echo json_encode(["status" => "00", "message" => "Se actualizo exitosamente la cita"]);
-                            }else{
-                                echo json_encode(["status" => "01", "message" => "Se actualizo exitosamente la cita"]);
-                            }  
+                             
                             } else {
                             echo json_encode(["status" => "99", "message" => "Error al actualizar la cita"]);
                         }

@@ -1,5 +1,3 @@
-<?php include 'layout/nav.php'; 
-//print_r($_SESSION);?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,20 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Cita</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/ProyectoAmbienteWebG5/js/scripts.js"></script>
     <style>
         .container {
-            width: 60%;
+            width: 40%;
             padding-right: $padding-x;
             padding-left: $padding-x;
             margin-right: auto;
             margin-left: auto;
            
         }
-        section{
-            width: 50%; 
+        section{            
             padding: 20px;
-            justify-self: center;
+        }
+        h1{
+            text-align: center;
         }
             
            
@@ -29,6 +29,7 @@
 </head>
 
 <body>
+    <h1>Editando Cita</h1>
 <section>
 <div class="container">
 <form id="formularioeditarcitas">
@@ -80,13 +81,9 @@
   
 </div>
 <div class="text-center">
-    <?php 
-    if($_SESSION['rol'] == "admin"){
-        echo"<a href='citas.php' class='btn btn-secondary'>Volver</a>";
-    }else{
-        echo"<a href='buscarCita.php' class='btn btn-secondary'>Volver</a>";
-    }
-    ?>
+    
+       <a href='citas.php' class='btn btn-secondary'>Volver</a>
+   
     
     <button type="submit" class="btn btn-success">Guardar Cambios</button>
 </div>
