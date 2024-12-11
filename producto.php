@@ -1,4 +1,56 @@
+<?php
+include 'db.php';  // Incluir la conexión a la base de datos
+
+// Eliminar producto
+if (isset($_GET['eliminar'])) {
+    $id_producto = $_GET['eliminar'];
+
+    // Eliminar el producto de la base de datos
+    $stmt = $conn->prepare("DELETE FROM producto WHERE id_producto = ?");
+    $stmt->bind_param("i", $id_producto);
+
+    if ($stmt->execute()) {
+        echo "<div class='alert alert-success'>Producto eliminado exitosamente.</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Error al eliminar el producto: " . $stmt->error . "</div>";
+    }
+
+    $stmt->close();
+}
+
+// Obtener productos
+$sql_productos = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.cantidad, c.nombre AS categoria_nombre 
+                  FROM producto p
+                  JOIN categoria c ON p.id_categoria = c.id_categoria";
+$result_productos = $conn->query($sql_productos);
+
+if ($result_productos->num_rows > 0) {
+    $productos = [];
+    while ($row = $result_productos->fetch_assoc()) {
+        $productos[] = $row;
+    }
+} else {
+    $productos = [];  // Si no hay productos, establecer un array vacío
+}
+
+// Obtener categorías
+$sql_categorias = "SELECT id_categoria, nombre FROM categoria";
+$result_categorias = $conn->query($sql_categorias);
+
+if ($result_categorias->num_rows > 0) {
+    $categorias = [];
+    while ($row = $result_categorias->fetch_assoc()) {
+        $categorias[] = $row;
+    }
+} else {
+    echo "No hay categorías disponibles.";
+}
+
+$conn->close();  // Cerrar la conexión después de la consulta
+?> 
+
 <?php include 'layout/nav.php'; ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,22 +69,24 @@
         </li>
 
         <!-- Formulario Modal para agregar Producto -->
-        <div class="modal fade" id="ProductoModal" tabindex="-1">
+        <div class="modal fade" id="ProductoModal" tabindex="-1" aria-labelledby="ProductoModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Agregar Producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <h5 class="modal-title" id="ProductoModalLabel">Agregar Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="ProductoForm" method="POST" action="agregar_producto.php">
-                            <div class="mb-3">
-                                <label for="productoId" class="form-label">ID de Producto</label>
-                                <input type="text" class="form-control" name="productoId" id="productoId" placeholder="Ingrese el ID del producto" required>
-                            </div>
+                        <form method="POST" action="agregar_producto.php">
                             <div class="mb-3">
                                 <label for="categoria" class="form-label">Categoría</label>
-                                <input type="text" class="form-control" name="categoria" id="categoria" placeholder="Ingrese la categoría del producto (ej. Medicamento, Gel, Glóbulos)" required>
+                                <select class="form-control" name="categoria" id="categoria" required>
+                                    <?php
+                                    foreach ($categorias as $categoria) {
+                                        echo "<option value='" . $categoria['id_categoria'] . "'>" . $categoria['nombre'] . "</option>";
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="nombreProducto" class="form-label">Nombre</label>
@@ -57,48 +111,7 @@
             </div>
         </div>
 
-        <!-- Modal para modificar Producto -->
-        <div class="modal fade" id="modificarProductoModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Modificar Producto</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="modificarProductoForm" method="POST" action="modificar_producto.php">
-                            <div class="mb-3">
-                                <label for="editProductoId" class="form-label">ID de Producto</label>
-                                <input type="text" class="form-control" name="editProductoId" id="editProductoId" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editCategoria" class="form-label">Categoría</label>
-                                <input type="text" class="form-control" name="editCategoria" id="editCategoria" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editNombreProducto" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" name="editNombreProducto" id="editNombreProducto" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editDescripcion" class="form-label">Descripción</label>
-                                <input type="text" class="form-control" name="editDescripcion" id="editDescripcion" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editProductoPrecio" class="form-label">Precio</label>
-                                <input type="number" class="form-control" name="editProductoPrecio" id="editProductoPrecio" required min="0" step="0.01">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editProductoCantidad" class="form-label">Cantidad</label>
-                                <input type="number" class="form-control" name="editProductoCantidad" id="editProductoCantidad" required min="1" step="1">
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Guardar Cambios</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Listado de Productos -->
+        <!-- Lista de Productos -->
         <h3 class="mt-5 mb-3 text-center">Lista de Productos</h3>
         <table class="table table-bordered">
             <thead class="table-dark">
@@ -112,52 +125,35 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="ProductoTableBody">
-                <!-- Producto 1 -->
-                <tr>
-                    <td>001</td>
-                    <td>Jarabe</td>
-                    <td>Drosera Homaccord Gotas 30ml Heel</td>
-                    <td>Gotas homeopáticas para diversas aplicaciones</td>
-                    <td>₡9000</td>
-                    <td>
-                        <input type="number" value="2" readonly style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#modificarProductoModal">
-                            <i class="bi bi-pencil-square"></i> Modificar
-                        </button>
-                        <button class="btn btn-danger btn-sm ms-2">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
-                <!-- Producto 2 -->
-                <tr>
-                    <td>002</td>
-                    <td>Glóbulos</td>
-                    <td>Nux Vomica 9 CH Glóbulos 4g Boiron</td>
-                    <td>Glóbulos para el tratamiento de dolencias digestivas</td>
-                    <td>₡3000</td>
-                    <td>
-                        <input type="number" value="5" readonly style="width: 60px; text-align: center; border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#modificarProductoModal">
-                            <i class="bi bi-pencil-square"></i> Modificar
-                        </button>
-                        <button class="btn btn-danger btn-sm ms-2">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
+            <tbody>
+                <?php
+                if (!empty($productos)) {
+                    foreach ($productos as $producto) {
+                        echo "<tr>";
+                        echo "<td>" . $producto['id_producto'] . "</td>";
+                        echo "<td>" . $producto['categoria_nombre'] . "</td>";
+                        echo "<td>" . $producto['nombre'] . "</td>";
+                        echo "<td>" . $producto['descripcion'] . "</td>";
+                        echo "<td>" . $producto['precio'] . "</td>";
+                        echo "<td>" . $producto['cantidad'] . "</td>";
+                        echo "<td>
+                            <a href='editar_producto.php?editar=" . $producto['id_producto'] . "' class='btn btn-warning btn-sm'>Editar</a>
+                            <a href='producto.php?eliminar=" . $producto['id_producto'] . "' class='btn btn-danger btn-sm'>Eliminar</a>
+                        </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7' class='text-center'>No hay productos disponibles.</td></tr>";
+                }
+                ?>
             </tbody>
         </table>
     </section>
-    
+
     <!-- Footer -->
     <?php include 'layout/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
