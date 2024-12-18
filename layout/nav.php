@@ -1,5 +1,8 @@
 <?php
-session_start();
+// Inicia sesión si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,8 +100,9 @@ session_start();
                         Carrito
                         <span id="cantidadCarrito" class="badge text-white ms-1 rounded-pill"
                             style="background-color: #2e2b27;">
-                           
+                            <?php echo isset($_SESSION['carrito']) ? array_sum(array_column($_SESSION['carrito'], 'cantidad')) : 0; ?>
                         </span>
+
                     </a>
                     </form>
                 </div>

@@ -1,6 +1,11 @@
-<?php include 'layout/nav.php'; 
-include 'DB.php';  // Incluir la conexión a la base de datos
+<?php
+include 'layout/nav.php'; 
+include 'db.php';         
 
+// Inicializar el carrito si no existe
+if (!isset($_SESSION['carrito'])) {
+    $_SESSION['carrito'] = [];
+}
 
 // Captura valores de búsqueda y filtro
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
@@ -78,8 +83,15 @@ $result = $conn->query($sql);
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="carrito.php">Agregar Al Carrito</a></div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-outline-dark mt-auto agregar-carrito" 
+                                data-id="<?php echo $row['id_producto']; ?>" 
+                                data-nombre="<?php echo htmlspecialchars($row['nombre']); ?>" 
+                                data-precio="<?php echo $row['precio']; ?>">
+                                Agregar Al Carrito
+                            </button>
                         </div>
+                    </div>>
                     </div>
                 </div>
                 <?php endwhile; ?>
@@ -92,7 +104,39 @@ $result = $conn->query($sql);
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    
-</body>
+    <script>
+            $(document).ready(function () {
+               
+                $(".agregar-carrito").on("click", function (e) {
+                    e.preventDefault(); 
+                    let idProducto = $(this).data("id");
+                    let nombreProducto = $(this).data("nombre");
+                    let precioProducto = $(this).data("precio");
 
+                    
+                    $.ajax({
+                        url: "carrito.php", 
+                        type: "POST",
+                        data: {
+                            agregar_carrito: true,
+                            id_producto: idProducto,
+                            nombre_producto: nombreProducto,
+                            precio: precioProducto,
+                        },
+                        success: function (response) {
+                            const carritoData = JSON.parse(response);
+                            
+                            $("#cantidadCarrito").text(carritoData.totalCantidad);
+                            alert("Producto agregado al carrito!");
+                        },
+                        error: function () {
+                            alert("Hubo un error al agregar el producto al carrito.");
+                        },
+                    });
+                });
+            });
+</script>
+
+
+</body>
 </html>
