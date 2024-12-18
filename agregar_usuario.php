@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ejecutar la consulta e insertar el usuario
     if ($stmt->execute()) {
+        // Redireccionar al archivo principal (usuario.php) después de la inserción exitosa
+        header('Location: usuario.php');
+        exit();
         echo "<div class='alert alert-success'>Usuario agregado correctamente.</div>";
     } else {
         echo "<div class='alert alert-danger'>Error al agregar el usuario: " . $stmt->error . "</div>";
