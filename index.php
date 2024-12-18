@@ -1,36 +1,59 @@
-<?php include 'layout/nav.php'; ?>
+<?php include 'layout/nav.php'; 
+include 'db.php';  // Incluir la conexión a la base de datos
+
+
+// Captura valores de búsqueda y filtro
+$busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+$filtroCategoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+
+// Consulta para cargar todas las categorías
+$sqlCategorias = "SELECT * FROM categoria";
+$resultCategorias = $conn->query($sqlCategorias);
+
+// Consulta dinámica para los productos
+$sql = "SELECT * FROM producto";
+$conditions = [];
+if (!empty($busqueda)) {
+    $conditions[] = "nombre LIKE '%" . $conn->real_escape_string($busqueda) . "%'";
+}
+if (!empty($filtroCategoria)) {
+    $conditions[] = "id_categoria = " . (int)$filtroCategoria;
+}
+if (!empty($conditions)) {
+    $sql .= " WHERE " . implode(' AND ', $conditions);
+}
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
-
-
-
 <body>
-    <!-- Navigation-->
-    
-
     <!-- Search and Filter Section -->
     <section class="py-3">
         <div class="container">
-            <div class="row">
-                <!-- Search Bar -->
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar por nombre de producto" />
-                        <button class="btn btn-outline-dark" type="button">Buscar</button>
+            <form method="GET" action="index.php">
+                <div class="row">
+                    <!-- Search Bar -->
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" name="buscar" class="form-control" placeholder="Buscar por nombre de producto" value="<?php echo htmlspecialchars($busqueda); ?>" />
+                            <button class="btn btn-outline-dark" type="submit">Buscar</button>
+                        </div>
+                    </div>
+                    <!-- Category Filter -->
+                    <div class="col-md-4">
+                        <select class="form-select" name="categoria" onchange="this.form.submit()">
+                            <option value="">Filtrar por categoría</option>
+                            <?php while ($cat = $resultCategorias->fetch_assoc()): ?>
+                                <option value="<?php echo $cat['id_categoria']; ?>" 
+                                    <?php if ($filtroCategoria == $cat['id_categoria']) echo 'selected'; ?>>
+                                    <?php echo htmlspecialchars($cat['nombre']); ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
                 </div>
-                
-                <!-- Category Filter -->
-                <div class="col-md-4">
-                    <select class="form-select">
-                        <option value="">Filtrar por categoría</option>
-                        <option value="1">Categoría 1</option>
-                        <option value="2">Categoría 2</option>
-                        <option value="3">Categoría 3</option>
-                        <!-- Agrega más opciones según sea necesario -->
-                    </select>
-                </div>
-            </div>
+            </form>
         </div>
     </section>
 
@@ -38,191 +61,28 @@
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
             <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <?php while($row = $result->fetch_assoc()): ?>
                 <div class="col mb-5">
                     <div class="card h-100">
                         <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod1.jpg" alt="..." />
+                        <img class="card-img-top" src="<?php echo '/'.htmlspecialchars($row['imagen']); ?>" alt="<?php echo htmlspecialchars($row['nombre']); ?>" />
                         <!-- Product details-->
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <!-- Product name-->
-                                <h5 class="fw-bolder">Nux Vomica 9 CH Glóbulos 4g Boiron</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
+                                <h5 class="fw-bolder"><?php echo htmlspecialchars($row['nombre']); ?></h5>
+                                <h6 style="color: #6c757d;"><?php echo htmlspecialchars($row['descripcion']); ?></h6>
                                 <!-- Product price-->
-                                ₡3000 
+                                ₡<?php echo number_format($row['precio'], 2); ?>
                             </div>
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="carrito.php">Agregar Al Carrito</a></div>
                         </div>
                     </div>
                 </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                    
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod2.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">L72 Gotas Orales 60ml Lehning</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product reviews-->
-                            
-                                <!-- Product price-->
-                               
-                                ₡8000
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod3.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">2LEID 30 Cápsulas Labolife</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product price-->
-                                
-                                ₡25000
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod4.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Tabacum 9 CH Glóbulos 4g Boiron</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product reviews-->
-                               
-                                <!-- Product price-->
-                                ₡3000
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod5.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Drosera Homaccord Gotas 30ml Heel</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product price-->
-                                
-                                ₡9000
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod6.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Euphorbium Gotas Nasales 20ml Heel</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product price-->
-                                ₡8500
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod7.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Carduus Marianus 7 CH Glóbulos 4g Iberhome</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-                                <!-- Product reviews-->
-                                
-                                <!-- Product price-->
-                            
-                                ₡3000
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Product image-->
-                        <img class="card-img-top" src="\ProyectoAmbienteWebG5\prod8.jpg" alt="..." />
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Thuya Occidentalis 6 CH Glóbulos 4g Iberhome</h5>
-                                <h6 style="color: #6c757d;">Descripción del Producto</h6>
-
-                                <!-- Product reviews-->
-                               
-                                <!-- Product price-->
-                                ₡2500
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar Al Carrito</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php endwhile; ?>
             </div>
         </div>
     </section>
