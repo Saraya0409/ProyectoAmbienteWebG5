@@ -1,5 +1,5 @@
 <?php include 'layout/nav.php'; 
-include 'db.php';  // Incluir la conexión a la base de datos
+include 'DB.php';  // Incluir la conexión a la base de datos
 
 
 // Captura valores de búsqueda y filtro

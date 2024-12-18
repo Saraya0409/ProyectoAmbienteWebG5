@@ -5,17 +5,27 @@ $data = $_POST;
 switch ($data['action']) {
     case 'add':
         if ($data["nombre"] ?? ''  != '') {
-           
-            $query = "INSERT INTO `citas` (`cedula`,`nombre`, `telefono`, `email`, `fechaCita`, `horaCita`, `doctor`) VALUES ('" . $data['cedula'] . "', '" . $data['nombre'] . "', '" . $data['telefono'] . "','" . $data['email'] . "','" . $data['fechaCita'] . "','" . $data['horaCita'] . "','" . $data['doctor'] . "')";
-            try {
-                if ($conn->query($query) ==  TRUE) {
-                    echo json_encode(["status" => "00", "message" => "Se agrego correctamente la cita"]);
-                } else {
+            $query ="SELECT COUNT(*)AS total FROM citas WHERE fechaCita='" . $data['fechaCita'] . "' AND horaCita='" . $data['horaCita'] . "'";
+            $result = $conn->query($query);
+            $row = $result->fetch_assoc();
+            $total = $row['total'];
+            if($total > 0){
+                echo json_encode(["status" => "99", "message" => "Fecha y hora no disponible"]);
+            }else{
+               
+                $query = "INSERT INTO `citas` (`cedula`,`nombre`, `telefono`, `email`, `fechaCita`, `horaCita`, `doctor`) VALUES ('" . $data['cedula'] . "', '" . $data['nombre'] . "', '" . $data['telefono'] . "','" . $data['email'] . "','" . $data['fechaCita'] . "','" . $data['horaCita'] . "','" . $data['doctor'] . "')";
+                try {
+                    if ($conn->query($query) ==  TRUE) {
+                        echo json_encode(["status" => "00", "message" => "Se agrego correctamente la cita"]);
+                    } else {
+                        echo json_encode(["status" => "99", "message" => "Error al guardar la cita"]);
+                    }
+                } catch (Exception $e) {
                     echo json_encode(["status" => "99", "message" => "Error al guardar la cita"]);
                 }
-            } catch (Exception $e) {
-                echo json_encode(["status" => "99", "message" => "Error al guardar la cita"]);
+    
             }
+            
         }
 
         break;
@@ -173,6 +183,28 @@ switch ($data['action']) {
                        
                      }
                         break;
+                        case 'horariodisponible':
+                            $query = "SELECT horaCita FROM citas WHERE fechaCita = '" . $data['fechaCita'] . "'";
+                            $result=$conn->query($query);
+                            $horasReservadas = [];
+                            try {
+                             if ($result){                               
+                                while ($hora = $result->fetch_assoc()) {
+                                    $horasReservadas[] = $hora['horaCita'];
+                                }
+                                echo json_encode(["status" => "00", "horaCita" => $horasReservadas]);
+
+                              }else{
+                                echo json_encode(["status" => "99", "message" => "Error al buscar las horas"]);
+                              }
+                            } catch (Exception $e) {
+                                echo json_encode(["status" => "99", "message" => "Error al buscar las horas"]);
+                            }
+
+
+
+
+                            break;
 
 }
 

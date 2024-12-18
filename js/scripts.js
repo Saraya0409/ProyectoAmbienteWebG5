@@ -71,7 +71,18 @@ $(function () {
                 function (data, status) {
                     let response = JSON.parse(data);
                     if(response.status == '00'){        
-                        $('#formularioModal').modal('hide');               
+                        $('#formularioModal').modal('hide');   
+                        $('#formularioModal form')[0].reset();   
+                        var selectedValue = $('#horaCita').val();  
+                        $('#horaCita option').show();  
+                       $('#horaCita option').each(function () {
+                        if ($(this).val() === selectedValue) {
+                            $(this).hide();  
+                        } else {
+                            $(this).show();  
+                        }
+                    });
+                               
                         getAllCitas();
                         
                     }
@@ -90,33 +101,36 @@ $(function () {
                 action: "getAll"
             },
             function (data, status) {
-                let response = JSON.parse(data);
-                if(response.status == '00'){
-                    response.citas.forEach(elemento => {
-                        $('#listCita').append(
-                            "<tr><td>" + 
-                            elemento.idcitas + "</td><td>" +
-                             elemento.cedula + "</td><td>" +
-                             elemento.nombre + "</td><td>" +
-                             elemento.telefono + "</td><td>" + 
-                             elemento.email + "</td><td>" + 
-                             elemento.fechaCita + "</td><td>" + 
-                             elemento.horaCita + "</td><td>" + 
-                             elemento.doctor + "</td><td>" +
-                           "<a href='editarCita.php?id=" + elemento.idcitas + "' class='btn btn-warning btn-sm'>Editar</a>" +
-                            
-                            " | " +
-                            "<button class='btn btn-danger btn-sm' id='eliminarCita' data-id='" + elemento.idcitas + "' )'>Eliminar</button>" +
-                         "</td>" +
-                     "</tr>"
-                        );
-                    });
-                }else {
-                    
-                    $('#listCita').append("<tr><td colspan='5'>No se encontraron citas.</td></tr>");
+                try {
+                    let response = JSON.parse(data);
+                    $('#listCita tbody').empty();
+                    if (response.status === '00') {
+                        response.citas.forEach(elemento => {
+                            $('#listCita').append(
+                                "<tr><td>" + 
+                                elemento.idcitas + "</td><td>" +
+                                elemento.cedula + "</td><td>" +
+                                elemento.nombre + "</td><td>" +
+                                elemento.telefono + "</td><td>" + 
+                                elemento.email + "</td><td>" + 
+                                elemento.fechaCita + "</td><td>" + 
+                                elemento.horaCita + "</td><td>" + 
+                                elemento.doctor + "</td><td>" +
+                                "<a href='editarCita.php?id=" + elemento.idcitas + "' class='btn btn-warning btn-sm'>Editar</a>" +
+                                " | " +
+                                "<button class='btn btn-danger btn-sm' id='eliminarCita' data-id='" + elemento.idcitas + "'>Eliminar</button>" +
+                                "</td></tr>"
+                            );
+                        });
+                    } else {
+                        $('#listCita').append("<tr><td colspan='9'>No se encontraron citas.</td></tr>");
+                    }
+                } catch (error) {
+                    console.error("Error al analizar el JSON:", error);
+                    console.log("Respuesta no válida del servidor:", data);
                 }
-            });
-    
+            }
+        );
     }
 
     getAllCitas();
@@ -336,5 +350,33 @@ $(function () {
                 alert("Ocurrió un error inesperado al intentar procesar la solicitud."); }
              
         }})
+
+
+        $('#fechaCita').on('change', function() {
+            var fechaCita = $(this).val(); 
+            $.post("procesarCitaBE.php", {  
+                action: "horariodisponible",  
+                fechaCita: fechaCita
+            }, function(data) {               
+                let response = JSON.parse(data);
+                
+                if(response.status == '00'){  
+                    var horasReservadas = response.horaCita;
+                    
+                $('#horaCita option').each(function() {
+                    
+                    var option = $(this);
+                    var hora = option.val();
+                    if (horasReservadas.includes(hora)) {
+                        option.hide();
+                    } else {
+                        option.show();
+                    }
+                });}else{
+                    alert(response.message); 
+                }
+            });
+        });
+
 })
 

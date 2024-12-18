@@ -147,11 +147,11 @@ session_start();
                     <div class="mb-3">
                         <label for="horaCita" class="form-label">Hora de la cita</label>
                         <select id="horaCita" name="horaCita" class="form-control">
-                            <option value="08:00">08:00 AM</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="14:00">02:00 PM</option>
-                            <option value="16:00">04:00 PM</option>
+                            <option value="08:00:00">08:00 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="14:00:00">02:00 PM</option>
+                            <option value="16:00:00">04:00 PM</option>
                         </select>
                     </div>
                     <div class="mb-3">
