@@ -1,5 +1,5 @@
 <?php
-include 'db.php';  // Incluir la conexión a la base de datos
+include 'db.php'; // Incluir la conexión a la base de datos
 
 // Procesar la solicitud de agregar un nuevo producto
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,13 +9,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantidad = $_POST['cantidad'];
     $id_categoria = $_POST['categoria'];
 
+    // Manejar la imagen
+    $imagen = $_FILES['imagen'];
+    $ruta_imagen = '';
+
+    if ($imagen['error'] === UPLOAD_ERR_OK) {
+        $directorio = 'imagenes_productos/';
+        $nombre_imagen = uniqid() . "_" . basename($imagen['name']);
+        $ruta_imagen = $directorio . $nombre_imagen;
+
+        // Crear el directorio si no existe
+        if (!is_dir($directorio)) {
+            mkdir($directorio, 0777, true);
+        }
+
+        // Mover la imagen al directorio
+        if (!move_uploaded_file($imagen['tmp_name'], $ruta_imagen)) {
+            echo "<div class='alert alert-danger'>Error al subir la imagen.</div>";
+            exit();
+        }
+    } else {
+        echo "<div class='alert alert-danger'>Error al procesar la imagen.</div>";
+        exit();
+    }
+
     // Insertar el producto en la base de datos
-    $stmt = $conn->prepare("INSERT INTO producto (nombre, descripcion, precio, cantidad, id_categoria) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssdii", $nombre, $descripcion, $precio, $cantidad, $id_categoria);
+    $stmt = $conn->prepare("INSERT INTO producto (nombre, descripcion, precio, cantidad, id_categoria, imagen) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssdiss", $nombre, $descripcion, $precio, $cantidad, $id_categoria, $ruta_imagen);
 
     if ($stmt->execute()) {
-        // Redireccionar al archivo principal (producto.php) después de la inserción exitosa
-        header('Location: producto.php');
+        header('Location: producto.php'); // Redirigir después de la inserción
         exit();
     } else {
         echo "<div class='alert alert-danger'>Error al agregar el producto: " . $stmt->error . "</div>";
@@ -32,13 +55,10 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $categorias[] = $row;
     }
-} else {
-    echo "<div class='alert alert-warning'>No hay categorías disponibles.</div>";
 }
 
-$conn->close();  // Cerrar la conexión
+$conn->close();
 ?>
-
 
 <?php include 'layout/nav.php'; ?>
 
@@ -55,40 +75,41 @@ $conn->close();  // Cerrar la conexión
         <h2 class="mb-4 text-center">Agregar Nuevo Producto</h2>
 
         <!-- Formulario para agregar un nuevo producto -->
-        <form method="POST" action="agregar_producto.php">
+        <form method="POST" action="agregar_producto.php" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="categoria" class="form-label">Categoría</label>
                 <select class="form-control" name="categoria" id="categoria" required>
-                    <?php
-                    foreach ($categorias as $categoria) {
-                        echo "<option value='" . $categoria['id_categoria'] . "'>" . $categoria['nombre'] . "</option>";
-                    }
-                    ?>
+                    <option value="" disabled selected>Seleccione una categoría</option>
+                    <?php foreach ($categorias as $categoria): ?>
+                        <option value="<?= $categoria['id_categoria']; ?>"><?= $categoria['nombre']; ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="nombreProducto" class="form-label">Nombre</label>
-                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" placeholder="Ingrese el nombre del producto" required>
+                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" required>
             </div>
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Ingrese la descripción del producto" required>
+                <input type="text" class="form-control" name="descripcion" id="descripcion" required>
             </div>
             <div class="mb-3">
                 <label for="ProductoPrecio" class="form-label">Precio</label>
-                <input type="number" class="form-control" name="precio" id="ProductoPrecio" placeholder="Ingrese el precio del producto" required min="0" step="0.01">
+                <input type="number" class="form-control" name="precio" id="ProductoPrecio" required>
             </div>
             <div class="mb-3">
                 <label for="ProductoCantidad" class="form-label">Cantidad</label>
-                <input type="number" class="form-control" name="cantidad" id="ProductoCantidad" placeholder="Ingrese la cantidad del producto" required min="1" step="1">
+                <input type="number" class="form-control" name="cantidad" id="ProductoCantidad" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Agregar Producto</button>
+            <div class="mb-3">
+                <label for="ProductoImagen" class="form-label">Imagen</label>
+                <input type="file" class="form-control" name="imagen" id="ProductoImagen" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Guardar Producto</button>
         </form>
     </section>
 
-    <!-- Footer -->
     <?php include 'layout/footer.php'; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

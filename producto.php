@@ -5,49 +5,44 @@ include 'db.php';  // Incluir la conexión a la base de datos
 if (isset($_GET['eliminar'])) {
     $id_producto = $_GET['eliminar'];
 
+    // Obtener y eliminar la imagen asociada
+    $stmt = $conn->prepare("SELECT imagen FROM producto WHERE id_producto = ?");
+    $stmt->bind_param("i", $id_producto);
+    $stmt->execute();
+    $stmt->bind_result($imagen);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($imagen && file_exists($imagen)) {
+        unlink($imagen);  // Eliminar la imagen del servidor
+    }
+
     // Eliminar el producto de la base de datos
     $stmt = $conn->prepare("DELETE FROM producto WHERE id_producto = ?");
     $stmt->bind_param("i", $id_producto);
-
     if ($stmt->execute()) {
         echo "<div class='alert alert-success'>Producto eliminado exitosamente.</div>";
     } else {
         echo "<div class='alert alert-danger'>Error al eliminar el producto: " . $stmt->error . "</div>";
     }
-
     $stmt->close();
 }
 
 // Obtener productos
-$sql_productos = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.cantidad, c.nombre AS categoria_nombre 
+$sql_productos = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, p.cantidad, c.nombre AS categoria_nombre, p.imagen 
                   FROM producto p
                   JOIN categoria c ON p.id_categoria = c.id_categoria";
 $result_productos = $conn->query($sql_productos);
 
-if ($result_productos->num_rows > 0) {
-    $productos = [];
-    while ($row = $result_productos->fetch_assoc()) {
-        $productos[] = $row;
-    }
-} else {
-    $productos = [];  // Si no hay productos, establecer un array vacío
-}
+$productos = $result_productos->num_rows > 0 ? $result_productos->fetch_all(MYSQLI_ASSOC) : [];
 
 // Obtener categorías
 $sql_categorias = "SELECT id_categoria, nombre FROM categoria";
 $result_categorias = $conn->query($sql_categorias);
-
-if ($result_categorias->num_rows > 0) {
-    $categorias = [];
-    while ($row = $result_categorias->fetch_assoc()) {
-        $categorias[] = $row;
-    }
-} else {
-    echo "No hay categorías disponibles.";
-}
+$categorias = $result_categorias->num_rows > 0 ? $result_categorias->fetch_all(MYSQLI_ASSOC) : [];
 
 $conn->close();  // Cerrar la conexión después de la consulta
-?> 
+?>
 
 <?php include 'layout/nav.php'; ?>
 
@@ -64,9 +59,7 @@ $conn->close();  // Cerrar la conexión después de la consulta
         <h2 class="mb-4 text-center">Administrar Productos</h2>
 
         <!-- Botón para abrir el formulario modal -->
-        <li class="nav-item">
-            <a href="#ProductoModal" class="btn btn-primary mb-4" data-bs-toggle="modal">Agregar Producto</a>
-        </li>
+        <a href="#ProductoModal" class="btn btn-primary mb-4" data-bs-toggle="modal">Agregar Producto</a>
 
         <!-- Formulario Modal para agregar Producto -->
         <div class="modal fade" id="ProductoModal" tabindex="-1" aria-labelledby="ProductoModalLabel" aria-hidden="true">
@@ -77,32 +70,34 @@ $conn->close();  // Cerrar la conexión después de la consulta
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="POST" action="agregar_producto.php">
+                        <form method="POST" action="agregar_producto.php" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="categoria" class="form-label">Categoría</label>
                                 <select class="form-control" name="categoria" id="categoria" required>
-                                    <?php
-                                    foreach ($categorias as $categoria) {
-                                        echo "<option value='" . $categoria['id_categoria'] . "'>" . $categoria['nombre'] . "</option>";
-                                    }
-                                    ?>
+                                    <?php foreach ($categorias as $categoria): ?>
+                                        <option value="<?= $categoria['id_categoria']; ?>"><?= $categoria['nombre']; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="nombreProducto" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" placeholder="Ingrese el nombre del producto" required>
+                                <input type="text" class="form-control" name="nombreProducto" id="nombreProducto" required>
                             </div>
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label">Descripción</label>
-                                <input type="text" class="form-control" name="descripcion" id="descripcion" placeholder="Ingrese la descripción del producto" required>
+                                <input type="text" class="form-control" name="descripcion" id="descripcion" required>
                             </div>
                             <div class="mb-3">
                                 <label for="ProductoPrecio" class="form-label">Precio</label>
-                                <input type="number" class="form-control" name="precio" id="ProductoPrecio" placeholder="Ingrese el precio del producto" required min="0" step="0.01">
+                                <input type="number" class="form-control" name="precio" id="ProductoPrecio" required>
                             </div>
                             <div class="mb-3">
                                 <label for="ProductoCantidad" class="form-label">Cantidad</label>
-                                <input type="number" class="form-control" name="cantidad" id="ProductoCantidad" placeholder="Ingrese la cantidad del producto" required min="1" step="1">
+                                <input type="number" class="form-control" name="cantidad" id="ProductoCantidad" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ProductoImagen" class="form-label">Imagen</label>
+                                <input type="file" class="form-control" name="imagen" id="ProductoImagen" accept="image/*" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Guardar Producto</button>
                         </form>
@@ -116,7 +111,8 @@ $conn->close();  // Cerrar la conexión después de la consulta
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>ID de Producto</th>
+                    <th>ID</th>
+                    <th>Imagen</th>
                     <th>Categoría</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
@@ -126,34 +122,30 @@ $conn->close();  // Cerrar la conexión después de la consulta
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if (!empty($productos)) {
-                    foreach ($productos as $producto) {
-                        echo "<tr>";
-                        echo "<td>" . $producto['id_producto'] . "</td>";
-                        echo "<td>" . $producto['categoria_nombre'] . "</td>";
-                        echo "<td>" . $producto['nombre'] . "</td>";
-                        echo "<td>" . $producto['descripcion'] . "</td>";
-                        echo "<td>" . $producto['precio'] . "</td>";
-                        echo "<td>" . $producto['cantidad'] . "</td>";
-                        echo "<td>
-                            <a href='editar_producto.php?editar=" . $producto['id_producto'] . "' class='btn btn-warning btn-sm'>Editar</a>
-                            <a href='producto.php?eliminar=" . $producto['id_producto'] . "' class='btn btn-danger btn-sm'>Eliminar</a>
-                        </td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>No hay productos disponibles.</td></tr>";
-                }
-                ?>
+                <?php if ($productos): ?>
+                    <?php foreach ($productos as $producto): ?>
+                        <tr>
+                            <td><?= $producto['id_producto']; ?></td>
+                            <td><img src="<?= $producto['imagen']; ?>" alt="<?= $producto['nombre']; ?>" style="width: 50px; height: 50px;"></td>
+                            <td><?= $producto['categoria_nombre']; ?></td>
+                            <td><?= $producto['nombre']; ?></td>
+                            <td><?= $producto['descripcion']; ?></td>
+                            <td><?= $producto['precio']; ?></td>
+                            <td><?= $producto['cantidad']; ?></td>
+                            <td>
+                                <a href="editar_producto.php?editar=<?= $producto['id_producto']; ?>" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="producto.php?eliminar=<?= $producto['id_producto']; ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="8" class="text-center">No hay productos disponibles.</td></tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </section>
 
-    <!-- Footer -->
     <?php include 'layout/footer.php'; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
