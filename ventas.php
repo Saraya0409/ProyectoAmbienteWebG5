@@ -118,7 +118,6 @@ $conn->close();
                         echo "<td>" . $venta['id_factura'] . "</td>";
                         echo "<td>" . $venta['total'] . "</td>";
                         echo "<td>
-                                <a href='editar_venta.php?editar=" . $venta['id_venta'] . "' class='btn btn-warning btn-sm'>Editar</a>
                                 <a href='ventas.php?eliminar=" . $venta['id_venta'] . "' class='btn btn-danger btn-sm'>Eliminar</a>
                               </td>";
                         echo "</tr>";
