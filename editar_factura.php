@@ -27,7 +27,7 @@ if (isset($_GET['editar'])) {
 
         // Actualizar la factura en la base de datos
         $stmt = $conn->prepare("UPDATE factura SET telefono = ?, metodo_pago = ? WHERE id_factura = ?");
-        $stmt->bind_param("sssssi", $telefono, $metodo_pago, $id_factura);
+        $stmt->bind_param("ssi", $telefono, $metodo_pago, $id_factura);
 
         if ($stmt->execute()) {
             // Redirigir a la página principal (factura.php) después de la actualización exitosa
