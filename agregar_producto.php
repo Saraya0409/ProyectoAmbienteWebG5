@@ -32,10 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='alert alert-danger'>Error al procesar la imagen.</div>";
         exit();
     }
+    $imagen_con_ruta = "ProyectoAmbienteWebG5/" . $ruta_imagen;
 
     // Insertar el producto en la base de datos
     $stmt = $conn->prepare("INSERT INTO producto (nombre, descripcion, precio, cantidad, id_categoria, imagen) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssdiss", $nombre, $descripcion, $precio, $cantidad, $id_categoria, $ruta_imagen);
+    $stmt->bind_param("ssdiss", $nombre, $descripcion, $precio, $cantidad, $id_categoria, $imagen_con_ruta);
 
     if ($stmt->execute()) {
         header('Location: producto.php'); // Redirigir después de la inserción

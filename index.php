@@ -1,17 +1,52 @@
 <?php
-//include 'layout/nav.php'; 
-include 'db.php';         
-include 'layout/nav.php'; 
-
-$isLoggedIn = isset($_SESSION['usuario_id']); // Verificar si el usuario está autenticado
-
+session_start(); // Inicia la sesión al principio del archivo
+include 'db.php';
 
 // Inicializar el carrito si no existe
 if (!isset($_SESSION['carrito'])) {
     $_SESSION['carrito'] = [];
 }
 
-// Captura valores de búsqueda y filtro
+// Procesar solicitudes AJAX
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verificar_inventario'])) {
+    header('Content-Type: application/json');
+
+    $idProducto = (int)$_POST['id_producto'];
+
+    if (!isset($_SESSION['inventario_temporal'])) {
+        $_SESSION['inventario_temporal'] = [];
+    }
+
+    if (!isset($_SESSION['inventario_temporal'][$idProducto])) {
+        $stmt = $conn->prepare("SELECT cantidad FROM producto WHERE id_producto = ?");
+        $stmt->bind_param("i", $idProducto);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $producto = $result->fetch_assoc();
+            $_SESSION['inventario_temporal'][$idProducto] = $producto['cantidad'];
+        } else {
+            echo json_encode(['disponible' => false, 'mensaje' => 'Producto no encontrado']);
+            exit();
+        }
+    }
+
+    $cantidadDisponible = $_SESSION['inventario_temporal'][$idProducto];
+
+    if ($cantidadDisponible > 0) {
+        $_SESSION['inventario_temporal'][$idProducto]--;
+        echo json_encode(['disponible' => true, 'cantidad_disponible' => $cantidadDisponible - 1]);
+    } else {
+        echo json_encode(['disponible' => false, 'cantidad_disponible' => 0, 'mensaje' => 'No hay suficiente inventario']);
+    }
+
+    exit();
+}
+
+include 'layout/nav.php';
+
+// Captura valores de búsqueda y filtro (GET)
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $filtroCategoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
@@ -34,8 +69,10 @@ if (!empty($conditions)) {
 $result = $conn->query($sql);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
+    
 <body>
 
 
@@ -77,7 +114,7 @@ $result = $conn->query($sql);
                 <div class="col mb-5">
                     <div class="card h-100">
                         <!-- Product image-->
-                        <img class="card-img-top" src="<?php echo '/'.htmlspecialchars($row['imagen']); ?>" alt="<?php echo htmlspecialchars($row['nombre']); ?>" />
+                        <img class="card-img-top" src="<?php echo htmlspecialchars($row['imagen']); ?>" alt="<?php echo htmlspecialchars($row['nombre']); ?>" />
                         <!-- Product details-->
                         <div class="card-body p-4">
                             <div class="text-center">
@@ -112,38 +149,75 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-            $(document).ready(function () {
-               
-                $(".agregar-carrito").on("click", function (e) {
-                    e.preventDefault(); 
-                    let idProducto = $(this).data("id");
-                    let nombreProducto = $(this).data("nombre");
-                    let precioProducto = $(this).data("precio");
+        // Script para manejar el carrito
+        $(document).on("click", ".agregar-carrito", function (e) {
+            e.preventDefault();
+            let idProducto = $(this).data("id");
+            let nombreProducto = $(this).data("nombre");
+            let precioProducto = $(this).data("precio");
 
-                    
-                    $.ajax({
-                        url: "carrito.php", 
-                        type: "POST",
-                        data: {
-                            agregar_carrito: true,
-                            id_producto: idProducto,
-                            nombre_producto: nombreProducto,
-                            precio: precioProducto,
-                        },
-                        success: function (response) {
-                            const carritoData = JSON.parse(response);
-                            
-                            $("#cantidadCarrito").text(carritoData.totalCantidad);
-                            alert("Producto agregado al carrito!");
-                        },
-                        error: function () {
-                            alert("Hubo un error al agregar el producto al carrito.");
-                        },
-                    });
-                });
+            // Verifica la cantidad disponible antes de agregar
+            $.ajax({
+                url: "index.php",
+                type: "POST",
+                data: {
+                    verificar_inventario: true,
+                    id_producto: idProducto,
+                },
+                success: function (response) {
+                    const inventarioData = typeof response === "object" ? response : JSON.parse(response);
+                    if (inventarioData.disponible) {
+                        $.ajax({
+                            url: "carrito.php",
+                            type: "POST",
+                            data: {
+                                agregar_carrito: true,
+                                id_producto: idProducto,
+                                nombre_producto: nombreProducto,
+                                precio: precioProducto,
+                            },
+                            success: function (response) {
+                                const carritoData = typeof response === "object" ? response : JSON.parse(response);
+                                $("#cantidadCarrito").text(carritoData.totalCantidad);
+                                alert("Producto agregado al carrito!");
+                            },
+                            error: function () {
+                                alert("Error al agregar el producto al carrito.");
+                            },
+                        });
+                    } else {
+                        alert("El producto '" + nombreProducto + "' no tiene suficiente inventario disponible.");
+                    }
+                },
+                error: function () {
+                    alert("Error al verificar el inventario.");
+                },
             });
-</script>
+        });
 
+        $(document).on("click", ".eliminar-carrito", function (e) {
+            e.preventDefault();
+            let idProducto = $(this).data("id");
+
+            $.ajax({
+                url: "carrito.php",
+                type: "POST",
+                data: {
+                    eliminar_carrito: true,
+                    id_producto: idProducto,
+                },
+                success: function (response) {
+                    const carritoData = typeof response === "object" ? response : JSON.parse(response);
+                    $("#cantidadCarrito").text(carritoData.totalCantidad);
+                    alert("Producto eliminado del carrito!");
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error al eliminar el producto del carrito.");
+                },
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -36,6 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtVenta->execute();
     }
 
+    $stmtVerificar = $conn->prepare("SELECT cantidad FROM producto WHERE id_producto = ?");
+    $stmtVerificar->bind_param("i", $idProducto);
+    $stmtVerificar->execute();
+    $resultado = $stmtVerificar->get_result();
+    $productoInventario = $resultado->fetch_assoc();
+
+    if ($productoInventario['cantidad'] >= $cantidad) {
+        $stmtInventario->bind_param("ii", $cantidad, $idProducto);
+        $stmtInventario->execute();
+    } else {
+        echo "Error: No hay suficiente inventario para el producto: $nombreProducto";
+       
+
     // Limpia el carrito después del envío
     unset($_SESSION['carrito']);
 

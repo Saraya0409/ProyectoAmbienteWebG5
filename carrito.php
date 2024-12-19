@@ -1,5 +1,5 @@
 <?php
-session_start();
+    session_start();
 
     // Inicializar el carrito si no existe
     if (!isset($_SESSION['carrito'])) {
@@ -32,10 +32,38 @@ session_start();
         exit();
     }
 
-    // Lógica para eliminar un producto del carrito
     if (isset($_POST['eliminar_carrito'])) {
         $id_producto = $_POST['id_producto'];
-        unset($_SESSION['carrito'][$id_producto]);
+    
+        if (isset($_SESSION['carrito'][$id_producto])) {
+            // Si existe en el carrito, devuelve la cantidad al inventario temporal
+            if (!isset($_SESSION['inventario_temporal'])) {
+                $_SESSION['inventario_temporal'] = [];
+            }
+    
+            if (!isset($_SESSION['inventario_temporal'][$id_producto])) {
+                // Si no existe en el inventario temporal, consulta la base de datos
+                $stmt = $conn->prepare("SELECT cantidad FROM producto WHERE id_producto = ?");
+                $stmt->bind_param("i", $id_producto);
+                $stmt->execute();
+                $result = $stmt->get_result();
+    
+                if ($result->num_rows > 0) {
+                    $producto = $result->fetch_assoc();
+                    $_SESSION['inventario_temporal'][$id_producto] = $producto['cantidad'];
+                }
+            }
+    
+            // Devuelve la cantidad del carrito al inventario temporal
+            $_SESSION['inventario_temporal'][$id_producto] += $_SESSION['carrito'][$id_producto]['cantidad'];
+    
+            // Elimina el producto del carrito
+            unset($_SESSION['carrito'][$id_producto]);
+        }
+    
+        // Redirige a la misma página después de eliminar
+        header('Location: carrito.php');
+        exit();
     }
 
     // Calcular el total del carrito
@@ -43,7 +71,6 @@ session_start();
     foreach ($_SESSION['carrito'] as $producto) {
         $total += $producto['precio'] * $producto['cantidad'];
     }
-
 ?>
 
 <!DOCTYPE html>
