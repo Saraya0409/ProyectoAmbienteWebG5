@@ -121,6 +121,8 @@ $usuario_nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="list-style-type: none; padding: 0; margin: 0;">
                 <li><a class="dropdown-item" href="inicioSesion.php">Iniciar Sesión</a></li>
                 <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="CrearUsuario.php">Crear usuario</a></li>
+                <li><hr class="dropdown-divider" /></li>
                 <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li> <!-- Opción que no hace nada -->
             </ul>
         <?php endif; ?>

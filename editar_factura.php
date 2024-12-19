@@ -22,15 +22,12 @@ if (isset($_GET['editar'])) {
 
     // Procesar la actualización de la factura cuando el formulario se envía
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $cedula = $_POST['cedulaFactura'];
-        $nombre_cliente = $_POST['nombreCliente'];
         $telefono = $_POST['telefono'];
-        $total = $_POST['total'];
         $metodo_pago = $_POST['metodoPago'];
 
         // Actualizar la factura en la base de datos
-        $stmt = $conn->prepare("UPDATE factura SET cedula_cliente = ?, nombre_cliente = ?, telefono = ?, total = ?, metodo_pago = ? WHERE id_factura = ?");
-        $stmt->bind_param("sssssi", $cedula, $nombre_cliente, $telefono, $total, $metodo_pago, $id_factura);
+        $stmt = $conn->prepare("UPDATE factura SET telefono = ?, metodo_pago = ? WHERE id_factura = ?");
+        $stmt->bind_param("sssssi", $telefono, $metodo_pago, $id_factura);
 
         if ($stmt->execute()) {
             // Redirigir a la página principal (factura.php) después de la actualización exitosa
@@ -64,20 +61,8 @@ $conn->close();  // Cerrar la conexión
         <!-- Formulario para editar la factura -->
         <form method="POST" action="editar_factura.php?editar=<?php echo $factura['id_factura']; ?>">
             <div class="mb-3">
-                <label for="cedulaFactura" class="form-label">Cédula</label>
-                <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" value="<?php echo $factura['cedula_cliente']; ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="nombreCliente" class="form-label">Nombre del Cliente</label>
-                <input type="text" class="form-control" name="nombreCliente" id="nombreCliente" value="<?php echo $factura['nombre_cliente']; ?>" required>
-            </div>
-            <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono</label>
                 <input type="text" class="form-control" name="telefono" id="telefono" value="<?php echo $factura['telefono']; ?>" required>
-            </div>
-            <div class="mb-3">
-                <label for="total" class="form-label">Total</label>
-                <input type="number" class="form-control" name="total" id="total" value="<?php echo $factura['total']; ?>" required step="0.01">
             </div>
             <div class="mb-3">
                 <label for="metodoPago" class="form-label">Método de Pago</label>
