@@ -3,6 +3,7 @@
 include 'db.php';         
 include 'layout/nav.php'; 
 
+$isLoggedIn = isset($_SESSION['usuario_id']); // Verificar si el usuario está autenticado
 
 
 // Inicializar el carrito si no existe

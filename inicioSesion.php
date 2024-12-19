@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
                 <!-- Botón para redirigir a la página de crear usuario -->
                 <div class="mt-4 text-center">
-                    <a href="crear_usuario.php" class="btn btn-secondary">Crear Usuario</a>
+                    <a href="CrearUsuario.php" class="btn btn-secondary">Crear Usuario</a>
                 </div>
             </div>
         </div>

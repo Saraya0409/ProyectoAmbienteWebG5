@@ -1,6 +1,8 @@
 <?php
 include 'db.php';  // Incluir la conexión a la base de datos
 
+session_start(); // Iniciar sesión al principio
+
 // Verificar si el parámetro 'editar' está presente en la URL
 if (isset($_GET['editar'])) {
     $id_factura = $_GET['editar'];
@@ -18,19 +20,20 @@ if (isset($_GET['editar'])) {
         exit;
     }
 
-    // Procesar la actualización de la factura
+    // Procesar la actualización de la factura cuando el formulario se envía
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cedula = $_POST['cedulaFactura'];
-        $monto = $_POST['montoFactura'];
-        $tipo_pago = $_POST['tipoPago'];
-        $productos = $_POST['productosFactura'];
+        $nombre_cliente = $_POST['nombreCliente'];
+        $telefono = $_POST['telefono'];
+        $total = $_POST['total'];
+        $metodo_pago = $_POST['metodoPago'];
 
-        // Actualizar la factura
-        $stmt = $conn->prepare("UPDATE factura SET cedula = ?, monto = ?, tipo_pago = ?, productos = ? WHERE id_factura = ?");
-        $stmt->bind_param("sdssi", $cedula, $monto, $tipo_pago, $productos, $id_factura);
+        // Actualizar la factura en la base de datos
+        $stmt = $conn->prepare("UPDATE factura SET cedula_cliente = ?, nombre_cliente = ?, telefono = ?, total = ?, metodo_pago = ? WHERE id_factura = ?");
+        $stmt->bind_param("sssssi", $cedula, $nombre_cliente, $telefono, $total, $metodo_pago, $id_factura);
 
         if ($stmt->execute()) {
-            // Redirigir a la página de facturas después de la actualización
+            // Redirigir a la página principal (factura.php) después de la actualización exitosa
             header("Location: factura.php");
             exit();  // Detener la ejecución después de la redirección
         } else {
@@ -62,23 +65,27 @@ $conn->close();  // Cerrar la conexión
         <form method="POST" action="editar_factura.php?editar=<?php echo $factura['id_factura']; ?>">
             <div class="mb-3">
                 <label for="cedulaFactura" class="form-label">Cédula</label>
-                <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" value="<?php echo $factura['cedula']; ?>" required>
+                <input type="text" class="form-control" name="cedulaFactura" id="cedulaFactura" value="<?php echo $factura['cedula_cliente']; ?>" required>
             </div>
             <div class="mb-3">
-                <label for="montoFactura" class="form-label">Monto</label>
-                <input type="number" class="form-control" name="montoFactura" id="montoFactura" value="<?php echo $factura['monto']; ?>" required step="0.01">
+                <label for="nombreCliente" class="form-label">Nombre del Cliente</label>
+                <input type="text" class="form-control" name="nombreCliente" id="nombreCliente" value="<?php echo $factura['nombre_cliente']; ?>" required>
             </div>
             <div class="mb-3">
-                <label for="tipoPago" class="form-label">Tipo de Pago</label>
-                <select class="form-control" name="tipoPago" id="tipoPago" required>
-                    <option value="Efectivo" <?php echo $factura['tipo_pago'] == 'Efectivo' ? 'selected' : ''; ?>>Efectivo</option>
-                    <option value="Tarjeta" <?php echo $factura['tipo_pago'] == 'Tarjeta' ? 'selected' : ''; ?>>Tarjeta</option>
-                    <option value="Sinpe" <?php echo $factura['tipo_pago'] == 'Sinpe' ? 'selected' : ''; ?>>Sinpe</option>
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" name="telefono" id="telefono" value="<?php echo $factura['telefono']; ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="total" class="form-label">Total</label>
+                <input type="number" class="form-control" name="total" id="total" value="<?php echo $factura['total']; ?>" required step="0.01">
+            </div>
+            <div class="mb-3">
+                <label for="metodoPago" class="form-label">Método de Pago</label>
+                <select class="form-control" name="metodoPago" id="metodoPago" required>
+                    <option value="Efectivo" <?php echo $factura['metodo_pago'] == 'Efectivo' ? 'selected' : ''; ?>>Efectivo</option>
+                    <option value="Tarjeta" <?php echo $factura['metodo_pago'] == 'Tarjeta' ? 'selected' : ''; ?>>Tarjeta</option>
+                    <option value="Sinpe" <?php echo $factura['metodo_pago'] == 'Sinpe' ? 'selected' : ''; ?>>Sinpe</option>
                 </select>
-            </div>
-            <div class="mb-3">
-                <label for="productosFactura" class="form-label">Productos</label>
-                <textarea class="form-control" name="productosFactura" id="productosFactura" required><?php echo $factura['productos']; ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary w-100">Actualizar Factura</button>
         </form>

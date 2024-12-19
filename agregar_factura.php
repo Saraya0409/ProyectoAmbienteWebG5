@@ -61,5 +61,28 @@ $conn->close();  // Cerrar la conexión
                 <label for="telefono" class="form-label">Teléfono</label>
                 <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Ingrese el teléfono del cliente" required>
             </div>
+            <div class="mb-3">
+                <label for="total" class="form-label">Total</label>
+                <input type="number" step="0.01" class="form-control" name="total" id="total" placeholder="Ingrese el total de la factura" required>
+            </div>
+            <div class="mb-3">
+                <label for="metodoPago" class="form-label">Método de Pago</label>
+                <select class="form-control" name="metodoPago" id="metodoPago" required>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Sinpe">Sinpe</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Agregar Factura</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <?php include 'layout/footer.php'; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
        
 

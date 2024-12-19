@@ -81,19 +81,31 @@ if (session_status() === PHP_SESSION_NONE) {
                     </li>
                 </ul>
 
-                <div class="d-flex align-items-center">
-                    <li class="nav-item dropdown me-3" style="list-style-type: none; margin: 0; padding: 0;">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Usuario</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown"
-                            style="list-style-type: none; padding: 0; margin: 0;">
-                            <li><a class="dropdown-item" href="inicioSesion.php">Iniciar Sesion</a></li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li><a class="dropdown-item" href="#!">Cerrar Sesion</a></li>
-                        </ul>
-                    </li>
+<?php
+
+$isLoggedIn = isset($_SESSION['usuario_id']); // Verificar si el usuario está autenticado
+$usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : ''; // Recuperar el nombre del usuario desde la sesión
+?>
+
+<div class="d-flex align-items-center">
+    <li class="nav-item dropdown me-3" style="list-style-type: none; margin: 0; padding: 0;">
+        <?php if ($isLoggedIn): ?>
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <?php echo $usuario_nombre; ?> <!-- Mostrar nombre de usuario -->
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="list-style-type: none; padding: 0; margin: 0;">
+                <li><a class="dropdown-item" href="cerrarSesion.php">Cerrar Sesión</a></li>
+            </ul>
+        <?php else: ?>
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Usuario</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="list-style-type: none; padding: 0; margin: 0;">
+                <li><a class="dropdown-item" href="inicioSesion.php">Iniciar Sesión</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#!">Cerrar Sesión</a></li> <!-- Opción que no hace nada -->
+            </ul>
+        <?php endif; ?>
+    </li>
+</div>
                     <form class="d-flex">
                     <a href="carrito.php" class="btn" style="color: #2e2b27; border-color: #2e2b27;">
                         <i class="bi-cart-fill me-1" style="color: #2e2b27;"></i>
