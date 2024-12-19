@@ -86,10 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                 </form>
-                <!-- Botón para redirigir a la página de crear usuario -->
+                <!-- Botón para redirigir a la página de crear usuario 
                 <div class="mt-4 text-center">
                     <a href="CrearUsuario.php" class="btn btn-secondary">Crear Usuario</a>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

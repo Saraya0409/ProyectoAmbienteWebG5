@@ -3,6 +3,10 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+$isLoggedIn = isset($_SESSION['usuario_id']); 
+$usuario_nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : ''; 
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,6 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <?php if ($isLoggedIn): ?>
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="citas.php">Citas</a></li>
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="factura.php">Facturas</a></li>
                     <li class="nav-item"><a class="nav-link active" href="envio.php">Envios</a></li>
@@ -79,13 +84,27 @@ if (session_status() === PHP_SESSION_NONE) {
                             Buscar Factura
                         </a>
                     </li>
+                    <?php else: ?>
+                    <li class="nav-item">
+                        <button class="btn btn-success" style="background-color: #28a745; color: white; font-weight: bold; padding: 8px 16px; border-radius: 5px; margin-left: 10px; text-align: center;" data-bs-toggle="modal" data-bs-target="#formularioModal">
+                            Agendar Cita
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a href="buscarCita.php" class="btn"
+                            style="background-color: #28a745; color: white; font-weight: bold; padding: 8px 16px; border-radius: 5px; margin-left: 10px; text-align: center;">
+                            Buscar Cita
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="buscarFactura.php" class="btn"
+                            style="background-color: #28a745; color: white; font-weight: bold; padding: 8px 16px; border-radius: 5px; margin-left: 10px; text-align: center;">
+                            Buscar Factura
+                        </a>
+                    </li>
                 </ul>
+                <?php endif; ?>
 
-<?php
-
-$isLoggedIn = isset($_SESSION['usuario_id']); // Verificar si el usuario está autenticado
-$usuario_nombre = isset($_SESSION['usuario_nombre']) ? $_SESSION['usuario_nombre'] : ''; // Recuperar el nombre del usuario desde la sesión
-?>
 
 <div class="d-flex align-items-center">
     <li class="nav-item dropdown me-3" style="list-style-type: none; margin: 0; padding: 0;">
