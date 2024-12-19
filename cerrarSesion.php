@@ -4,6 +4,6 @@ session_unset(); // Eliminar todas las variables de sesión
 session_destroy(); // Destruir la sesión
 
 // Redirigir al usuario a la página de inicio de sesión o página principal
-header('Location: inicioSesion.php');
+header('Location: index.php');
 exit();
 ?>

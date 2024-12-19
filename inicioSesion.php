@@ -12,32 +12,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nombre_usuario = $_POST['nombre_usuario'];
         $contrasena = $_POST['contrasena'];
 
-        // Preparar la consulta para verificar si el usuario existe
-        $stmt = $conn->prepare("SELECT * FROM usuario WHERE nombre_usuario = ?");
-        $stmt->bind_param("s", $nombre_usuario);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        // Verificar si el usuario existe
-        if ($result->num_rows > 0) {
-            $usuario = $result->fetch_assoc();
-
-            // Verificar la contraseña
-            if (password_verify($contrasena, $usuario['contrasena'])) {
-                // Si la contraseña es correcta, iniciar la sesión
-                $_SESSION['usuario_id'] = $usuario['id_usuario'];
-                $_SESSION['nombre_usuario'] = $usuario['nombre_usuario']; // Guardar el nombre de usuario en la sesión
-                header('Location: index.php'); // Redirigir al index
-                exit();
-            } else {
-                echo "<div class='alert alert-danger'>Contraseña incorrecta.</div>";
-            }
+        // Verificar si el nombre de usuario es admin y la contraseña es 123 (simulando autenticación)
+        if ($nombre_usuario === 'admin' && $contrasena === '123') {
+            // Si es admin, iniciar sesión
+            $_SESSION['usuario_id'] = 1; // ID de usuario admin
+            $_SESSION['nombre_usuario'] = $nombre_usuario; // Guardar el nombre de usuario en la sesión
+            header('Location: index.php'); // Redirigir al index
+            exit();
         } else {
-            echo "<div class='alert alert-danger'>El usuario no existe.</div>";
-        }
+            // Consulta a la base de datos para verificar usuario
+            $stmt = $conn->prepare("SELECT * FROM usuario WHERE nombre_usuario = ?");
+            $stmt->bind_param("s", $nombre_usuario);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        $stmt->close();
-        $conn->close();
+            // Verificar si el usuario existe
+            if ($result->num_rows > 0) {
+                $usuario = $result->fetch_assoc();
+
+                // Verificar la contraseña
+                if (password_verify($contrasena, $usuario['contrasena'])) {
+                    // Si la contraseña es correcta, iniciar la sesión
+                    $_SESSION['usuario_id'] = $usuario['id_usuario'];
+                    $_SESSION['nombre_usuario'] = $usuario['nombre_usuario']; // Guardar el nombre de usuario en la sesión
+                    header('Location: index.php'); // Redirigir al index
+                    exit();
+                } else {
+                    echo "<div class='alert alert-danger'>Contraseña incorrecta.</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>El usuario no existe.</div>";
+            }
+
+            $stmt->close();
+        }
     } else {
         echo "<div class='alert alert-danger'>Por favor, ingresa ambos campos.</div>";
     }
@@ -92,5 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 

@@ -40,7 +40,6 @@ $result = $conn->query($sql);
 
 
 
-    
     <!-- Search and Filter Section -->
     <section class="py-3">
         <div class="container">
