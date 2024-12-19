@@ -1,41 +1,42 @@
 <?php
-session_start(); // Iniciar la sesión para poder almacenar datos
-
 include 'db.php'; // Incluir la conexión a la base de datos
 
-// Verificar si el formulario ha sido enviado
+// Verificar si el formulario fue enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener los datos del formulario
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $nombre_usuario = $_POST['nombre_usuario'];
+    $contrasena = $_POST['contrasena'];
 
-    // Preparar la consulta para verificar las credenciales
+    // Preparar la consulta para obtener el usuario de la base de datos
     $stmt = $conn->prepare("SELECT * FROM usuario WHERE nombre_usuario = ?");
-    $stmt->bind_param("s", $username); // Se vincula el parámetro username
-
-    // Ejecutar la consulta
+    $stmt->bind_param("s", $nombre_usuario);
     $stmt->execute();
     $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
 
-    // Verificar si el usuario existe y si la contraseña es correcta
-    if ($user && password_verify($password, $user['contrasena'])) {
-        // Si las credenciales son correctas, se almacenan los datos en la sesión
-        $_SESSION['user_id'] = $user['id_usuario'];
-        $_SESSION['username'] = $user['nombre_usuario'];
+    // Verificar si el usuario existe
+    if ($result->num_rows > 0) {
+        $usuario = $result->fetch_assoc();
 
-        // Redirigir al index o a una página protegida
-        header("Location: index.php");
-        exit;
+        // Verificar si la contraseña es correcta
+        if (password_verify($contrasena, $usuario['contrasena'])) {
+            // Iniciar sesión
+            session_start();
+            $_SESSION['usuario_id'] = $usuario['id_usuario']; // Guardar el ID del usuario en la sesión
+
+            // Redirigir al index.php después de iniciar sesión correctamente
+            header('Location: index.php');
+            exit(); // Terminar la ejecución del script
+        } else {
+            echo "Contraseña incorrecta.";
+        }
     } else {
-        // Si las credenciales son incorrectas, mostrar un mensaje de error
-        $error_message = "Usuario o contraseña incorrectos.";
+        echo "El usuario no existe.";
     }
 
     $stmt->close();
-    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
