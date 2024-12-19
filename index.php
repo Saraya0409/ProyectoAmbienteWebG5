@@ -1,12 +1,8 @@
 <?php
 //include 'layout/nav.php'; 
 include 'db.php';         
+include 'layout/nav.php'; 
 
-// Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['user_id'])) {
-    header("Location: inicioSesion.php");
-    exit;
-}
 
 
 // Inicializar el carrito si no existe
@@ -41,20 +37,7 @@ $result = $conn->query($sql);
 <html lang="en">
 <body>
 
-<!-- Navegación -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="inicioSesion.php">
-                <img src="\ProyectoAmbienteWebG5\logo.png" alt="Start Bootstrap" style="height: auto; width: 100px;">
-            </a>
-        </div>
-    </nav>
 
-    <!-- Contenido de la página principal -->
-    <div class="container my-5">
-        <h1>Bienvenido, <?php echo $_SESSION['username']; ?>!</h1>
-        <p>Has iniciado sesión correctamente.</p>
-    </div>
 
     
     <!-- Search and Filter Section -->

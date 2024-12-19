@@ -92,10 +92,6 @@ if (session_status() === PHP_SESSION_NONE) {
                                 <hr class="dropdown-divider" />
                             </li>
                             <li><a class="dropdown-item" href="#!">Cerrar Sesion</a></li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li><a class="dropdown-item" href="crearusuario.php">Crear usuario</a></li>
                         </ul>
                     </li>
                     <form class="d-flex">
