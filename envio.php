@@ -3,13 +3,13 @@ include 'db.php'; // Conexión a la base de datos
 
 // Manejar la eliminación de un envío
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_envio_id'])) {
-    $id_envio = intval($_POST['eliminar_envio_id']); // Asegurar un entero para evitar inyecciones SQL
+    $id_envio = intval($_POST['eliminar_envio_id']); 
 
     $stmt = $conn->prepare("DELETE FROM envio WHERE id_envio = ?");
     $stmt->bind_param("i", $id_envio);
 
     if ($stmt->execute()) {
-        header('Location: envio.php?mensaje=eliminado'); // Redirigir después de eliminar
+        header('Location: envio.php?mensaje=eliminado'); 
         exit();
     } else {
         echo "<div class='alert alert-danger'>Error al eliminar el envío: " . $stmt->error . "</div>";
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_envio']) && isset(
     $stmt->bind_param("ssi", $nombre, $direccion, $id_envio);
 
     if ($stmt->execute()) {
-        header('Location: envio.php?mensaje=modificado'); // Redirigir después de modificar
+        header('Location: envio.php?mensaje=modificado'); 
         exit();
     } else {
         echo "<div class='alert alert-danger'>Error al modificar el envío: " . $stmt->error . "</div>";
