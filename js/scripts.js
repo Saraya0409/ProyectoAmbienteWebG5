@@ -12,12 +12,22 @@ $(function () {
         let isValid = true;
 
         if ($('#cedula').val().trim() === '') {
-            $('#cedula').addClass('error');
-            $('#error-cedula').show();
-            isValid = false;
+           
+                $('#cedula').addClass('error');
+                $('#error-cedula').show();
+                isValid = false;
+           
         } else {
-            $('#cedula').removeClass('error');
-            $('#error-cedula').hide();
+           
+            if ($('#cedula').val().trim().length > 8) {
+                $('#cedula').removeClass('error');
+                $('#error-cedula').hide();
+               
+            } else {
+                $('#cedula').addClass('error');
+                $('#error-cedula').text('El formato de cedula no es válido.').show();
+                isValid = false;
+            }
         }
 
         if ($('#email').val().trim() === '') {
@@ -46,14 +56,23 @@ $(function () {
             $('#telefono').removeClass('error');
             $('#error-telefono').hide();
         }
+        const fechaActual = new Date();
+        const fechaIngresada = new Date($('#fechaCita').val().trim())
         if ($('#fechaCita').val().trim() === '') {
             $('#fechaCita').addClass('error');
             $('#error-fechaCita').show();
             isValid = false;
         } else {
-            $('#fechaCita').removeClass('error');
-            $('#error-fechaCita').hide();
-        }
+            if (fechaIngresada <= fechaActual) {
+                $('#fechaCita').addClass('error');
+                $('#error-fechaCita').text('La fecha debe ser mayor a la fecha actual.').show();
+                isValid = false;
+            } else {
+                $('#fechaCita').removeClass('error');
+                $('#error-fechaCita').hide();
+            }
+        }
+        
        
         if (isValid) {
             try{
