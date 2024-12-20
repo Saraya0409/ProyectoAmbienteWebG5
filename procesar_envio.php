@@ -34,20 +34,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subtotal = $producto['precio'] * $cantidad;
         $stmtVenta->bind_param("iisid", $idProducto, $cantidad, $nombreProducto, $idFactura, $subtotal);
         $stmtVenta->execute();
+
+        // Verificar y actualizar el inventario
+        $stmtVerificar = $conn->prepare("SELECT cantidad FROM producto WHERE id_producto = ?");
+        $stmtVerificar->bind_param("i", $idProducto);
+        $stmtVerificar->execute();
+        $resultado = $stmtVerificar->get_result();
+        $productoInventario = $resultado->fetch_assoc();
+
+        if ($productoInventario['cantidad'] >= $cantidad) {
+            // Preparar la consulta para actualizar el inventario
+            $stmtInventario = $conn->prepare("UPDATE producto SET cantidad = cantidad - ? WHERE id_producto = ?");
+            $stmtInventario->bind_param("ii", $cantidad, $idProducto);
+            $stmtInventario->execute();
+        } else {
+            echo "Error: No hay suficiente inventario para el producto: $nombreProducto";
+            exit(); // Detener el proceso si no hay suficiente inventario
+        }
     }
-
-    $stmtVerificar = $conn->prepare("SELECT cantidad FROM producto WHERE id_producto = ?");
-    $stmtVerificar->bind_param("i", $idProducto);
-    $stmtVerificar->execute();
-    $resultado = $stmtVerificar->get_result();
-    $productoInventario = $resultado->fetch_assoc();
-
-    if ($productoInventario['cantidad'] >= $cantidad) {
-        $stmtInventario->bind_param("ii", $cantidad, $idProducto);
-        $stmtInventario->execute();
-    } else {
-        echo "Error: No hay suficiente inventario para el producto: $nombreProducto";
-       
 
     // Limpia el carrito después del envío
     unset($_SESSION['carrito']);
@@ -56,9 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: formEnvio.php?codigoFactura=$idFactura");
     exit();
 
+    // Cierra las conexiones
     $stmtFactura->close();
     $stmtEnvio->close();
     $stmtVenta->close();
+    $stmtInventario->close();
     $conn->close();
 }
 ?>
