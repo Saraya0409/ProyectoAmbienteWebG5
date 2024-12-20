@@ -3,16 +3,34 @@ include 'db.php'; // Conexión a la base de datos
 
 // Manejar la eliminación de un envío
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_envio_id'])) {
-    $id_envio = $_POST['eliminar_envio_id'];
+    $id_envio = intval($_POST['eliminar_envio_id']); // Asegurar un entero para evitar inyecciones SQL
 
     $stmt = $conn->prepare("DELETE FROM envio WHERE id_envio = ?");
     $stmt->bind_param("i", $id_envio);
 
     if ($stmt->execute()) {
-        header('Location: crud_envios.php?mensaje=eliminado'); // Redirigir después de eliminar
+        header('Location: envio.php?mensaje=eliminado'); // Redirigir después de eliminar
         exit();
     } else {
         echo "<div class='alert alert-danger'>Error al eliminar el envío: " . $stmt->error . "</div>";
+    }
+    $stmt->close();
+}
+
+// Manejar la modificación de un envío
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_envio']) && isset($_POST['editNombreEnvio']) && isset($_POST['editDireccionEnvio'])) {
+    $id_envio = intval($_POST['id_envio']);
+    $nombre = $_POST['editNombreEnvio'];
+    $direccion = $_POST['editDireccionEnvio'];
+
+    $stmt = $conn->prepare("UPDATE envio SET nombre = ?, direccion = ? WHERE id_envio = ?");
+    $stmt->bind_param("ssi", $nombre, $direccion, $id_envio);
+
+    if ($stmt->execute()) {
+        header('Location: envio.php?mensaje=modificado'); // Redirigir después de modificar
+        exit();
+    } else {
+        echo "<div class='alert alert-danger'>Error al modificar el envío: " . $stmt->error . "</div>";
     }
     $stmt->close();
 }
@@ -49,7 +67,7 @@ $conn->close();
                         <h5 class="modal-title">Modificar Envío</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <form method="POST" action="crud_envios.php">
+                    <form method="POST" action="envio.php">
                         <div class="modal-body">
                             <input type="hidden" name="id_envio" id="editIdEnvio">
                             <div class="mb-3">
@@ -86,21 +104,21 @@ $conn->close();
             <tbody id="envioTableBody">
                 <?php foreach ($envios as $envio): ?>
                 <tr>
-                    <td><?= $envio['id_envio']; ?></td>
-                    <td><?= $envio['id_factura']; ?></td>
-                    <td><?= $envio['cedula']; ?></td>
-                    <td><?= $envio['nombre']; ?></td>
-                    <td><?= $envio['direccion']; ?></td>
+                    <td><?= htmlspecialchars($envio['id_envio']); ?></td>
+                    <td><?= htmlspecialchars($envio['id_factura']); ?></td>
+                    <td><?= htmlspecialchars($envio['cedula']); ?></td>
+                    <td><?= htmlspecialchars($envio['nombre']); ?></td>
+                    <td><?= htmlspecialchars($envio['direccion']); ?></td>
                     <td>
                         <button 
                             class="btn btn-primary btn-sm" 
                             data-bs-toggle="modal" 
                             data-bs-target="#modificarEnvioModal"
-                            onclick="cargarEnvio('<?= $envio['id_envio']; ?>', '<?= $envio['nombre']; ?>', '<?= $envio['direccion']; ?>')"
+                            onclick="cargarEnvio('<?= $envio['id_envio']; ?>', '<?= htmlspecialchars($envio['nombre']); ?>', '<?= htmlspecialchars($envio['direccion']); ?>')"
                         >
                             Modificar
                         </button>
-                        <form method="POST" action="crud_envios.php" style="display: inline-block;">
+                        <form method="POST" action="envio.php" style="display: inline-block;">
                             <input type="hidden" name="eliminar_envio_id" value="<?= $envio['id_envio']; ?>">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este envío?')">Eliminar</button>
                         </form>
